@@ -1,43 +1,45 @@
 # wiki-vis
 
-把一个 **Markdown 目录** 打包成 **一个自包含、可视化的 `wiki.html`** —— 双击即可在浏览器查看，可直接拷给别人或部署到任意静态服务器。
+Turn a folder of **Markdown** docs into a single, self-contained, good-looking **`wiki.html`** — double-click to view in any browser, hand it to someone, or drop it on any static host.
 
-> Turn a folder of Markdown docs into a single, self-contained, good-looking `wiki.html`. Zero backend, only Python 3 stdlib at build time.
+> Indigo-gradient + Tailwind-slate theme. Sidebar nav, heading-level collapsible section frames, Mermaid diagrams with image zoom, code highlighting. Works as a CLI tool **and** as a [Claude Code](https://claude.com/claude-code) Skill.
 
-紫靛渐变 + Tailwind slate 配色，自带侧边栏导航、按标题层级折叠的章节框体、Mermaid 图与图片放大、代码高亮。既能当命令行工具用，也是一个 [Claude Code](https://claude.com/claude-code) Skill。
+中文说明见 [README_cn.md](README_cn.md)。
 
----
-
-## ✨ 特性
-
-- **侧边栏导航** + 紫靛渐变品牌头（Tailwind slate 配色）
-- **章节框体**：按 `H2/H3/H4…` 自动套实色标题栏（蓝/绿/琥珀/红随层级），**点击折叠**，带「展开/折叠全部」
-- **顶部彩色统计条**：章节 / 小节 / 图示 / 表格 计数
-- **Mermaid 图**：与页面同色系主题 + 圆角投影；每张图右上角 **🔍 放大浮层**（滚轮缩放、拖拽平移、Esc 关闭）
-- **代码高亮**（highlight.js）、表格、引用块统一风格
-- **内部 `.md` 链接互跳**、上一页 / 下一页
-- **单文件输出**、纯前端、零后端；构建脚本只依赖 Python 3 标准库
+![wiki-vis screenshot](assets/screenshot.png)
 
 ---
 
-## 🚀 快速开始
+## ✨ Features
+
+- **Sidebar navigation** + indigo-gradient brand header (Tailwind slate palette)
+- **Section frames** — `H2/H3/H4…` automatically wrapped in solid-color title bars (blue / green / amber / red by depth), **click to collapse**, with expand/collapse-all
+- **Top stat bar** — counts of sections / subsections / diagrams / tables
+- **Mermaid diagrams** — themed to match the page + rounded shadow; every diagram gets a **🔍 zoom overlay** (wheel zoom, drag to pan, Esc to close)
+- **Code highlighting** (highlight.js), styled tables and blockquotes
+- **Internal `.md` links** rewired to in-page navigation; prev / next pager
+- **Single-file output**, pure front-end, zero backend; the build script uses only the Python 3 standard library
+
+---
+
+## 🚀 Quick start
 
 ```bash
-# 自动模式：扫描 docs/，README/index 置顶，其余按文件名排序
+# Auto mode: scan docs/, put README/index first, the rest sorted by filename
 python3 build_wiki.py --docs docs --out wiki.html
 
-# 或用配置文件控制顺序 / 标题 / 品牌
+# Or drive it with a config file (order / titles / branding)
 python3 build_wiki.py --config wiki.config.json
 ```
 
-打开看看：
+Open it:
 
 ```bash
 open wiki.html        # macOS
 xdg-open wiki.html    # Linux
 ```
 
-仓库自带可运行示例：
+Try the bundled example:
 
 ```bash
 python3 build_wiki.py --docs examples/docs --out examples/wiki.html
@@ -45,82 +47,82 @@ python3 build_wiki.py --docs examples/docs --out examples/wiki.html
 
 ---
 
-## ⚙️ 配置文件
+## ⚙️ Config file
 
-`wiki.config.json`（全部字段可选，CLI 参数优先级更高，示例见 [`references/wiki.config.example.json`](references/wiki.config.example.json)）：
+`wiki.config.json` (every field optional; CLI flags win; full sample in [`references/wiki.config.example.json`](references/wiki.config.example.json)):
 
 ```json
 {
-  "title":    "项目 Wiki",
-  "brand":    "📚 项目 Wiki",
-  "subtitle": "工程文档 · 知识库",
-  "footer":   "由 wiki-vis 生成 · 改 .md 后重跑即可更新",
+  "title":    "Project Wiki",
+  "brand":    "📚 Project Wiki",
+  "subtitle": "Engineering docs · Knowledge base",
+  "footer":   "Built with wiki-vis · edit .md and re-run to update",
   "docs":     "docs",
   "out":      "wiki.html",
   "pages": [
-    { "file": "README.md",     "id": "home",     "nav": "🏠 首页 / 导航" },
-    { "file": "01-架构设计.md", "id": "arch",     "nav": "01 · 架构设计 ⭐" }
+    { "file": "README.md",      "id": "home", "nav": "🏠 Home" },
+    { "file": "01-overview.md", "id": "overview", "nav": "01 · Overview ⭐" }
   ]
 }
 ```
 
-未提供 `pages` 时自动发现 `*.md`；`pages[].nav` 可含 emoji/⭐，`pages[].id` 用于锚点与内部链接互跳（缺省自动推导）。
+Without `pages`, `*.md` files are auto-discovered. `pages[].nav` may contain emoji; `pages[].id` is used for anchors and internal-link routing (auto-derived if omitted).
 
-CLI 参数：`--docs --out --config --template --title --brand --subtitle --footer`。
+CLI flags: `--docs --out --config --template --title --brand --subtitle --footer`.
 
 ---
 
-## 🧩 作为 Claude Code Skill 使用
+## 🧩 Use as a Claude Code Skill
 
-本仓库根目录就是一个完整的 skill。直接克隆到 skills 目录即可：
+The repository root **is** a complete skill. Clone it straight into a skills directory:
 
 ```bash
-# 个人级（跨项目可用）
+# user-level (available across projects)
 git clone https://github.com/yanqiyang62/wiki-vis.git ~/.claude/skills/wiki-vis
-# 或项目级
+# or project-level
 git clone https://github.com/yanqiyang62/wiki-vis.git .claude/skills/wiki-vis
 ```
 
-之后对 Claude 说「把 docs 生成 wiki」即可触发。
+Then just tell Claude "turn my docs into a wiki".
 
 ---
 
-## 📦 离线使用
+## 📦 Offline use
 
-模板默认通过 CDN 加载 `marked` / `mermaid` / `highlight.js`，**查看页面时需联网**。
-离线场景：把这三个库下载到本地，将 `template.html` `<head>` 里的 4 个 CDN `src/href` 改为本地相对路径，与 `wiki.html` 一起分发即可。
-
----
-
-## ⚠️ Mermaid 写法雷区（避免 `Syntax error`）
-
-- 节点文字里要出现 `"` 用 `#34;`，要出现 `#` 用 `#35;`（`\` 转义无效）。
-- 虚线/箭头带标签且标签含 `. / : ( )` 等字符时，用管道写法 `A -.->|标签| B`，别用 `A -.标签.-> B`。
+The template loads `marked` / `mermaid` / `highlight.js` from a CDN, so **viewing the page needs internet**. To go offline, download those three libraries, change the 4 CDN `src`/`href` in `template.html`'s `<head>` to local relative paths, and ship them alongside `wiki.html`.
 
 ---
 
-## 🎨 自定义外观
+## ⚠️ Mermaid gotchas (avoid `Syntax error`)
 
-改 `template.html` 的 `<style>`，设计令牌都在 `:root`：
+- To put a `"` inside node text use `#34;`, for `#` use `#35;` (`\` escaping does **not** work).
+- For a dotted/labelled edge whose label contains `. / : ( )` etc., use the pipe form `A -.->|label| B` instead of `A -.label.-> B`.
+
+---
+
+## 🎨 Customize the look
+
+Edit the `<style>` in `template.html`; design tokens live in `:root`:
 
 ```css
---c-primary:#667eea; --grad:linear-gradient(135deg,#667eea,#764ba2);  /* 主色 / 渐变 */
+--c-primary:#667eea; --grad:linear-gradient(135deg,#667eea,#764ba2);  /* accent / gradient */
 --c-bg:#f8f9fb; --c-text:#1e293b; --c-border:#e2e8f0; --radius:8px;
 ```
 
-章节框体的层级配色在 `.sec-l2/.sec-l3/.sec-l4/.sec-l5 > .sec-head { background:… }`。
+Per-level frame colors are in `.sec-l2/.sec-l3/.sec-l4/.sec-l5 > .sec-head { background:… }`.
 
 ---
 
-## 📁 结构
+## 📁 Layout
 
 ```
 wiki-vis/
-├── build_wiki.py                    # 生成脚本（纯 Python3 标准库）
-├── template.html                    # 模板壳：CSS + JS 引擎 + {{占位符}}
-├── SKILL.md                         # Claude Code skill 清单
+├── build_wiki.py                    # generator (Python 3 stdlib only)
+├── template.html                    # shell: CSS + JS engine + {{placeholders}}
+├── SKILL.md                         # Claude Code skill manifest
 ├── references/wiki.config.example.json
-└── examples/docs/                   # 可直接构建的示例文档
+├── examples/docs/                   # sample docs you can build immediately
+└── assets/screenshot.png
 ```
 
 ## License
