@@ -1,71 +1,101 @@
-# wiki-vis
+<div align="center">
 
-A **standard project-wiki solution**: let [Claude Code](https://claude.com/claude-code) analyze a codebase and author a multi-doc, diagram-rich wiki under `docs/`, then pack it into a single, self-contained, good-looking **`wiki.html`** — double-click to view, hand it to someone, or drop it on any static host. (It can also just convert existing Markdown.)
+# 📚 wiki-vis
 
-> Indigo-gradient + Tailwind-slate theme. Sidebar nav, heading-level collapsible section frames, Mermaid diagrams with image zoom, code highlighting. Works as a CLI tool **and** as a Claude Code Skill.
+**Turn a codebase into a single, self-contained, good-looking `wiki.html`.**
 
-中文说明见 [README_cn.md](README_cn.md)。
+A standard project-wiki solution for [Claude Code](https://claude.com/claude-code): analyze a repo → author a multi-doc, diagram-rich wiki under `docs/` → pack it into one HTML file you can double-click, share, or drop on any static host. *(It also just converts existing Markdown.)*
 
-![wiki-vis — light](assets/screenshot.png)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+&nbsp;![Python](https://img.shields.io/badge/Python-3.7%2B-3776AB?logo=python&logoColor=white)
+&nbsp;![Dependencies](https://img.shields.io/badge/dependencies-stdlib%20only-22c55e)
+&nbsp;![Claude Code](https://img.shields.io/badge/Claude%20Code-skill-8B5CF6)
 
-*Light theme. A dark theme is built in too — toggle ☾/☀ in the header (persisted), or set the default at build time with `--theme dark`:*
+**English** · [中文](README_cn.md)
 
-![wiki-vis — dark](assets/screenshot-dark.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/screenshot-dark.png">
+  <img alt="wiki-vis screenshot" src="assets/screenshot.png" width="860">
+</picture>
+
+<sub>Built-in light & dark themes — this image follows your GitHub theme. Toggle ☾/☀ in any generated wiki.</sub>
+
+</div>
 
 ---
 
-## 🧭 Two modes
+## ✨ Highlights
 
-- **Author a project wiki (the main use)** — point Claude Code at a repo; it follows [`references/authoring-guide.md`](references/authoring-guide.md): recon → information architecture → diagram-first writing → lint → build → review. Produces a newcomer-friendly, heavily-diagrammed `docs/` set (flowcharts, E-R, sequence) and the HTML — including *how a multi-agent system is actually executed by Claude Code*.
-- **Convert existing Markdown** — already have `docs/*.md`? Skip straight to the build commands below.
+| | |
+|---|---|
+| 🧭 **Two modes** | Analyze a project and *author* the docs, or convert Markdown you already have |
+| 🎨 **Polished theme** | Indigo-gradient + Tailwind-slate, sidebar nav, heading-level **collapsible** color-coded section frames |
+| 📊 **Stat bar** | Live counts of sections / subsections / diagrams / tables |
+| 🖼️ **Mermaid** | Page-matched theme + **🔍 zoom** overlay (wheel zoom · drag-pan · Esc) |
+| 🌗 **Light / dark** | ☾/☀ toggle persisted in `localStorage`; default via `--theme light\|dark\|auto` |
+| ✅ **Quality gate** | `lint_mermaid.py` catches `Syntax error` pitfalls; `check_render.py` renders every diagram to be sure |
+| 📦 **Single file** | Pure front-end, zero backend; the build script is **Python 3 stdlib only** |
 
 ---
 
-## ✨ Features
+## 🧭 Two ways to use it
 
-- **Sidebar navigation** + indigo-gradient brand header (Tailwind slate palette)
-- **Section frames** — `H2/H3/H4…` automatically wrapped in solid-color title bars (blue / green / amber / red by depth), **click to collapse**, with expand/collapse-all
-- **Top stat bar** — counts of sections / subsections / diagrams / tables
-- **Mermaid diagrams** — themed to match the page + rounded shadow; every diagram gets a **🔍 zoom overlay** (wheel zoom, drag to pan, Esc to close)
-- **Light / dark theme** — every wiki has a ☾/☀ toggle (persisted in `localStorage`); pick the default with `--theme light|dark|auto`. Code highlighting follows (github ↔ github-dark); Mermaid renders on a light panel that stays readable in both modes
-- **Code highlighting** (highlight.js), styled tables and blockquotes
-- **Internal `.md` links** rewired to in-page navigation; prev / next pager
-- **Diagram quality gate** — `lint_mermaid.py` statically catches the Mermaid pitfalls that cause `Syntax error`; `check_render.py` renders every diagram via headless Chrome to catch the rest
-- **Single-file output**, pure front-end, zero backend; the build script uses only the Python 3 standard library
+**1 · Author a project wiki** *(the main use)* — point Claude Code at a repo. It follows [`references/authoring-guide.md`](references/authoring-guide.md):
+
+```
+recon → information architecture → diagram-first writing → lint → build → review
+```
+
+…and produces a newcomer-friendly, heavily-diagrammed `docs/` set (flowcharts, E-R, sequence) plus the HTML — including *how a multi-agent system is actually executed by Claude Code*.
+
+**2 · Convert existing Markdown** — already have `docs/*.md`? Jump straight to the commands below.
+
+---
+
+## 🛠 How it works
+
+In short: `build_wiki.py` fills a single self-contained template (`template.html`) with your `docs/*.md` and emits one `wiki.html` that renders itself in the browser. When Claude Code authors a wiki from a project, it follows a short pipeline — read the code, lay out the docs, write diagram-first, lint, build, review — detailed in [`references/authoring-guide.md`](references/authoring-guide.md).
 
 ---
 
 ## 🚀 Quick start
 
 ```bash
-# Lint Mermaid first (optional but recommended), then build
-python3 lint_mermaid.py docs/
-
-# Auto mode: scan docs/, put README/index first, the rest sorted by filename
-python3 build_wiki.py --docs docs --out wiki.html --lint
-
-# Or drive it with a config file (order / titles / branding)
-python3 build_wiki.py --config wiki.config.json --lint
+python3 lint_mermaid.py docs/                              # 1. (recommended) catch diagram errors early
+python3 build_wiki.py --docs docs --out wiki.html --lint   # 2. auto mode: README/index first, rest by name
+python3 build_wiki.py --config wiki.config.json --lint     #    …or drive it with a config file
+open wiki.html            # macOS  (Linux: xdg-open wiki.html)
 ```
 
-Open it:
+Try the bundled example in seconds:
 
 ```bash
-open wiki.html        # macOS
-xdg-open wiki.html    # Linux
-```
-
-Try the bundled example:
-
-```bash
-python3 build_wiki.py --docs examples/docs --out examples/wiki.html
+python3 build_wiki.py --docs examples/docs --out examples/wiki.html --theme auto
 ```
 
 ---
 
-## ⚙️ Config file
+## ⚙️ Configuration
 
-`wiki.config.json` (every field optional; CLI flags win; full sample in [`references/wiki.config.example.json`](references/wiki.config.example.json)):
+Everything is optional. **CLI flags override the config file**, which overrides the defaults.
+
+<details open>
+<summary><b>CLI flags</b></summary>
+
+| Flag | Meaning |
+|---|---|
+| `--docs DIR` | Markdown directory (default `docs/`, falls back to `.`) |
+| `--out FILE` | Output file (default `wiki.html`) |
+| `--config FILE` | JSON config (see below) |
+| `--theme light\|dark\|auto` | Default theme (`auto` follows the OS); readers can still toggle |
+| `--lint` | Run the Mermaid lint before building; abort on error |
+| `--title / --brand / --subtitle / --footer` | Branding text |
+| `--template FILE` | Use a custom template shell |
+
+</details>
+
+<details>
+<summary><b>wiki.config.json</b> (full sample in <a href="references/wiki.config.example.json"><code>references/</code></a>)</summary>
 
 ```json
 {
@@ -75,76 +105,79 @@ python3 build_wiki.py --docs examples/docs --out examples/wiki.html
   "footer":   "Built with wiki-vis · edit .md and re-run to update",
   "docs":     "docs",
   "out":      "wiki.html",
+  "theme":    "auto",
   "pages": [
-    { "file": "README.md",      "id": "home", "nav": "🏠 Home" },
+    { "file": "README.md",      "id": "home",     "nav": "🏠 Home" },
     { "file": "01-overview.md", "id": "overview", "nav": "01 · Overview ⭐" }
   ]
 }
 ```
 
-Without `pages`, `*.md` files are auto-discovered. `pages[].nav` may contain emoji; `pages[].id` is used for anchors and internal-link routing (auto-derived if omitted).
+Without `pages`, `*.md` files are auto-discovered. `pages[].nav` may contain emoji; `pages[].id` drives anchors and internal-link routing (auto-derived if omitted).
 
-CLI flags: `--docs --out --config --template --title --brand --subtitle --footer`.
+</details>
 
 ---
 
-## 🧩 Use as a Claude Code Skill
+## 🧩 Install as a Claude Code skill
 
-The repository root **is** a complete skill. Clone it straight into a skills directory:
+The repository root **is** a complete skill — clone it into a skills directory:
 
 ```bash
-# user-level (available across projects)
-git clone https://github.com/yanqiyang62/wiki-vis.git ~/.claude/skills/wiki-vis
-# or project-level
-git clone https://github.com/yanqiyang62/wiki-vis.git .claude/skills/wiki-vis
+git clone https://github.com/yanqiyang62/wiki-vis.git ~/.claude/skills/wiki-vis      # user-level
+git clone https://github.com/yanqiyang62/wiki-vis.git .claude/skills/wiki-vis         # or project-level
 ```
 
-Then just tell Claude "turn my docs into a wiki".
+Then just tell Claude *“turn my project into a wiki”*.
+
+---
+
+## 🖼️ Mermaid tips (avoid `Syntax error`)
+
+Both are enforced by `lint_mermaid.py`, so you usually don't have to remember them:
+
+- Put `"` in node text as `#34;` and `#` as `#35;` — `\` escaping does **not** work.
+- For a labelled edge whose label contains `. / : ( )`, use the pipe form `A -.->|label| B` instead of `A -.label.-> B`.
+
+---
+
+## 🎨 Theming
+
+Design tokens live in `:root` of `template.html`:
+
+```css
+--c-primary:#667eea;  --grad:linear-gradient(135deg,#667eea,#764ba2);   /* accent / gradient */
+--c-bg:#f8f9fb;  --c-text:#1e293b;  --c-border:#e2e8f0;  --radius:8px;
+```
+
+Per-level section-bar colors are in `.sec-l2 / .sec-l3 / .sec-l4 / .sec-l5 > .sec-head`. Dark-mode overrides sit under `html[data-theme="dark"]`.
 
 ---
 
 ## 📦 Offline use
 
-The template loads `marked` / `mermaid` / `highlight.js` from a CDN, so **viewing the page needs internet**. To go offline, download those three libraries, change the 4 CDN `src`/`href` in `template.html`'s `<head>` to local relative paths, and ship them alongside `wiki.html`.
+The template pulls `marked` / `mermaid` / `highlight.js` from a CDN, so **viewing needs internet**. To go fully offline, download those three libraries and repoint the 4 CDN `src`/`href` in `template.html`'s `<head>` to local paths shipped next to `wiki.html`.
 
 ---
 
-## ⚠️ Mermaid gotchas (avoid `Syntax error`)
-
-- To put a `"` inside node text use `#34;`, for `#` use `#35;` (`\` escaping does **not** work).
-- For a dotted/labelled edge whose label contains `. / : ( )` etc., use the pipe form `A -.->|label| B` instead of `A -.label.-> B`.
-
----
-
-## 🎨 Customize the look
-
-Edit the `<style>` in `template.html`; design tokens live in `:root`:
-
-```css
---c-primary:#667eea; --grad:linear-gradient(135deg,#667eea,#764ba2);  /* accent / gradient */
---c-bg:#f8f9fb; --c-text:#1e293b; --c-border:#e2e8f0; --radius:8px;
-```
-
-Per-level frame colors are in `.sec-l2/.sec-l3/.sec-l4/.sec-l5 > .sec-head { background:… }`.
-
----
-
-## 📁 Layout
+## 📁 Project layout
 
 ```
 wiki-vis/
-├── build_wiki.py                    # build: docs/*.md → wiki.html (Python 3 stdlib)
-├── lint_mermaid.py                  # static Mermaid lint (file:line + fixes)
-├── check_render.py                  # optional: render every diagram via headless Chrome
-├── template.html                    # shell: CSS + JS engine + {{placeholders}}
-├── SKILL.md                         # Claude Code skill manifest
+├── build_wiki.py                 # build: docs/*.md → wiki.html  (Python 3 stdlib)
+├── lint_mermaid.py               # static Mermaid lint (file:line + fixes)
+├── check_render.py               # optional: render every diagram via headless Chrome
+├── template.html                 # the shell: CSS + JS engine + {{placeholders}}
+├── SKILL.md                      # Claude Code skill manifest
 ├── references/
-│   ├── authoring-guide.md           # project → multi-doc wiki workflow (the "brain")
+│   ├── authoring-guide.md        # project → multi-doc wiki workflow (the "brain")
 │   └── wiki.config.example.json
-├── examples/docs/                   # sample docs you can build immediately
-└── assets/screenshot.png
+├── examples/docs/                # sample docs you can build right away
+└── assets/                       # screenshots
 ```
 
-## License
+---
 
-[MIT](LICENSE)
+<div align="center">
+<sub>MIT © <a href="LICENSE">yanqiyang62</a> · made with <a href="https://claude.com/claude-code">Claude Code</a></sub>
+</div>
