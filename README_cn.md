@@ -6,7 +6,8 @@
 
 面向 [Claude Code](https://claude.com/claude-code) 的标准项目 wiki 方案：分析仓库 → 在 `docs/` 写出多文档、多图的 wiki → 打包成一个 HTML 文件，双击即看、可分发、可丢到任意静态托管。*（也能直接转换现成的 Markdown。）*
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-online-0ea5e9?logo=github&logoColor=white)](https://yanqiyang62.github.io/wiki-vis/)
+&nbsp;[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 &nbsp;![Python](https://img.shields.io/badge/Python-3.7%2B-3776AB?logo=python&logoColor=white)
 &nbsp;![Dependencies](https://img.shields.io/badge/dependencies-stdlib%20only-22c55e)
 &nbsp;![Claude Code](https://img.shields.io/badge/Claude%20Code-skill-8B5CF6)

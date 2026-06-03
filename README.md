@@ -6,7 +6,8 @@
 
 A standard project-wiki solution for [Claude Code](https://claude.com/claude-code): analyze a repo → author a multi-doc, diagram-rich wiki under `docs/` → pack it into one HTML file you can double-click, share, or drop on any static host. *(It also just converts existing Markdown.)*
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-online-0ea5e9?logo=github&logoColor=white)](https://yanqiyang62.github.io/wiki-vis/)
+&nbsp;[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 &nbsp;![Python](https://img.shields.io/badge/Python-3.7%2B-3776AB?logo=python&logoColor=white)
 &nbsp;![Dependencies](https://img.shields.io/badge/dependencies-stdlib%20only-22c55e)
 &nbsp;![Claude Code](https://img.shields.io/badge/Claude%20Code-skill-8B5CF6)
