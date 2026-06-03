@@ -6,7 +6,11 @@
 
 English: [README.md](README.md)。
 
-![wiki-vis 截图](assets/screenshot.png)
+![wiki-vis — 亮色](assets/screenshot.png)
+
+*亮色主题。也内置暗色主题 —— 点品牌头右上角 ☾/☀ 切换（状态会记住），或构建时用 `--theme dark` 设默认：*
+
+![wiki-vis — 暗色](assets/screenshot-dark.png)
 
 ---
 
@@ -23,6 +27,7 @@ English: [README.md](README.md)。
 - **章节框体**：按 `H2/H3/H4…` 自动套实色标题栏（蓝/绿/琥珀/红随层级），**点击折叠**，带「展开/折叠全部」
 - **顶部彩色统计条**：章节 / 小节 / 图示 / 表格 计数
 - **Mermaid 图**：与页面同色系主题 + 圆角投影；每张图右上角 **🔍 放大浮层**（滚轮缩放、拖拽平移、Esc 关闭）
+- **亮 / 暗主题** —— 每份 wiki 都带 ☾/☀ 切换（状态存 `localStorage`）；用 `--theme light|dark|auto` 设默认。代码高亮跟随（github ↔ github-dark）；Mermaid 图始终用浅色面板，亮/暗下都清晰
 - **代码高亮**（highlight.js）、表格、引用块统一风格
 - **内部 `.md` 链接互跳**、上一页 / 下一页
 - **图质量闸门** —— `lint_mermaid.py` 静态抓出会导致 `Syntax error` 的 Mermaid 雷区；`check_render.py` 用无头 Chrome 真渲染每张图兜底

@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-default-theme="light">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>wiki-vis 示例</title>
+<script>
+  /* 尽早设定主题，避免暗色刷新闪白（FOUC） */
+  (function () {
+    try {
+      var def = document.documentElement.getAttribute('data-default-theme') || 'light';
+      var pref = localStorage.getItem('wiki-theme') || def;
+      var dark = pref === 'dark' ||
+                 (pref === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme-pref', pref);
+    } catch (e) {}
+  })();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css"/>
+<link id="hljs-theme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
 <style>
   /* ── 设计令牌：对齐「全链路追踪」风格（Tailwind slate + 紫靛渐变） ── */
@@ -20,6 +33,36 @@
     --shadow:0 1px 3px rgba(0,0,0,0.06); --shadow-lg:0 4px 24px rgba(0,0,0,0.06);
     --grad:linear-gradient(135deg,#667eea,#764ba2);
   }
+  /* ── 暗色主题：覆盖设计令牌 + 个别硬编码色 ── */
+  html[data-theme="dark"] {
+    --c-bg:#0f172a; --c-surface:#1e293b; --c-border:#334155;
+    --c-text:#e2e8f0; --c-muted:#94a3b8; --c-primary:#818cf8;
+    --code-bg:#0b1220;
+    --shadow:0 1px 3px rgba(0,0,0,0.4); --shadow-lg:0 8px 30px rgba(0,0,0,0.5);
+  }
+  html[data-theme="dark"] #sidebar li a:hover { background:#334155; color:#a5b4fc; }
+  html[data-theme="dark"] #sidebar li a.active { background:rgba(129,140,248,.15); color:#a5b4fc; }
+  html[data-theme="dark"] #content a, html[data-theme="dark"] .sec-ctrl a { color:#a5b4fc; }
+  html[data-theme="dark"] #content code { color:#c4b5fd; }
+  html[data-theme="dark"] #content blockquote { background:rgba(129,140,248,.12); color:#c7d2fe; }
+  html[data-theme="dark"] #content th { background:#0f172a; }
+  html[data-theme="dark"] #content tr:hover { background:#334155; }
+  html[data-theme="dark"] .pager a:hover { background:rgba(129,140,248,.15); }
+  /* 暗色下 Mermaid 图保持浅色面板（深字浅底）：避免浅色填充节点出现浅底+浅字看不清 */
+  html[data-theme="dark"] .mermaid { border-color:#cbd5e1; }
+  html[data-theme="dark"] .sc-blue   { background:rgba(37,99,235,.18); border-color:rgba(59,130,246,.4); color:#93c5fd; }
+  html[data-theme="dark"] .sc-green  { background:rgba(22,163,74,.18); border-color:rgba(34,197,94,.4); color:#86efac; }
+  html[data-theme="dark"] .sc-yellow { background:rgba(217,119,6,.18); border-color:rgba(245,158,11,.4); color:#fcd34d; }
+  html[data-theme="dark"] .sc-red    { background:rgba(220,38,38,.18); border-color:rgba(239,68,68,.4); color:#fca5a5; }
+  html[data-theme="dark"] .sc-purple { background:rgba(124,58,237,.18); border-color:rgba(139,92,246,.4); color:#c4b5fd; }
+  /* 主题切换按钮（品牌头右上角） */
+  .brand { position:relative; }
+  #theme-toggle { position:absolute; top:12px; right:14px; width:26px; height:26px;
+                  display:flex; align-items:center; justify-content:center; padding:0;
+                  border:1px solid rgba(255,255,255,.4); border-radius:7px;
+                  background:rgba(255,255,255,.16); color:#fff; cursor:pointer;
+                  font-size:13px; line-height:1; transition:background .15s; }
+  #theme-toggle:hover { background:rgba(255,255,255,.3); }
   * { box-sizing: border-box; }
   body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Helvetica,Arial,sans-serif;
          color:var(--c-text); background:var(--c-bg); font-size:13px; line-height:1.55; }
@@ -162,7 +205,7 @@
 <body>
   <button id="toggle">☰ 目录</button>
   <nav id="sidebar">
-    <div class="brand">📚 wiki-vis 示例<small>演示文档</small></div>
+    <div class="brand"><button id="theme-toggle" type="button" title="切换亮/暗主题">☾</button>📚 wiki-vis 示例<small>演示文档</small></div>
     <ul>
       <li><a href="#readme" data-target="readme">🏠 首页 / 导航</a></li>
       <li><a href="#01" data-target="01">01 · 架构示例</a></li>
@@ -274,24 +317,49 @@ sequenceDiagram
   const NAV = Array.from(document.querySelectorAll('#sidebar a[data-target]'));
   const ORDER = NAV.map(a => a.dataset.target);
 
-  mermaid.initialize({
-    startOnLoad:false, securityLevel:'loose', theme:'base',
-    themeVariables:{
-      fontFamily:'-apple-system,"PingFang SC","Segoe UI",sans-serif', fontSize:'13px',
-      primaryColor:'#eef2ff', primaryBorderColor:'#818cf8', primaryTextColor:'#1e293b',
-      lineColor:'#94a3b8', secondaryColor:'#f0fdf4', secondaryBorderColor:'#86efac',
-      tertiaryColor:'#fff7ed', tertiaryBorderColor:'#fdba74',
-      clusterBkg:'#f8f9fb', clusterBorder:'#e2e8f0', titleColor:'#1e293b',
-      edgeLabelBackground:'#ffffff',
-      actorBkg:'#eef2ff', actorBorder:'#818cf8', actorTextColor:'#1e293b',
-      signalColor:'#64748b', signalTextColor:'#334155',
-      labelBoxBkgColor:'#eef2ff', labelBoxBorderColor:'#818cf8',
-      noteBkgColor:'#fffbeb', noteBorderColor:'#fcd34d',
-    },
-    flowchart:{ htmlLabels:true, curve:'basis', padding:10, nodeSpacing:42, rankSpacing:46 },
-    sequence:{ useMaxWidth:true, mirrorActors:false },
-  });
+  // Mermaid 始终用浅色主题渲染：图在亮/暗页面下都是「浅底深字」，保证可读，
+  // 也保留文档里手写的内联高亮填充色（暗色页面里图就像一张浅色卡片）。
+  function initMermaid() {
+    mermaid.initialize({
+      startOnLoad:false, securityLevel:'loose', theme:'base',
+      themeVariables:{
+        fontFamily:'-apple-system,"PingFang SC","Segoe UI",sans-serif', fontSize:'13px',
+        primaryColor:'#eef2ff', primaryBorderColor:'#818cf8', primaryTextColor:'#1e293b',
+        lineColor:'#94a3b8', secondaryColor:'#f0fdf4', secondaryBorderColor:'#86efac',
+        tertiaryColor:'#fff7ed', tertiaryBorderColor:'#fdba74',
+        clusterBkg:'#f8f9fb', clusterBorder:'#e2e8f0', titleColor:'#1e293b',
+        edgeLabelBackground:'#ffffff',
+        actorBkg:'#eef2ff', actorBorder:'#818cf8', actorTextColor:'#1e293b',
+        signalColor:'#64748b', signalTextColor:'#334155',
+        labelBoxBkgColor:'#eef2ff', labelBoxBorderColor:'#818cf8',
+        noteBkgColor:'#fffbeb', noteBorderColor:'#fcd34d',
+      },
+      flowchart:{ htmlLabels:true, curve:'basis', padding:10, nodeSpacing:42, rankSpacing:46 },
+      sequence:{ useMaxWidth:true, mirrorActors:false },
+    });
+  }
+  initMermaid();
   marked.setOptions({ gfm:true, breaks:false });
+
+  // 给一个范围内的所有图加右上角放大按钮
+  function addZoomButtons(scope) {
+    scope.querySelectorAll('.mermaid').forEach(box => {
+      const svg = box.querySelector('svg');
+      if (!svg || box.querySelector('.zoom-btn')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'zoom-btn'; btn.title = '点击放大'; btn.textContent = '🔍';
+      btn.addEventListener('click', () => openZoom(svg));
+      box.appendChild(btn);
+    });
+  }
+  // 按当前主题渲染范围内的 mermaid 图
+  async function renderMermaidIn(scope) {
+    const nodes = scope.querySelectorAll('.mermaid');
+    if (!nodes.length) return;
+    initMermaid();
+    try { await mermaid.run({ nodes }); } catch (e) { console.warn('mermaid:', e); }
+    addZoomButtons(scope);
+  }
 
   function titleOf(id) {
     const a = NAV.find(x => x.dataset.target === id);
@@ -399,18 +467,8 @@ sequenceDiagram
       div.textContent = code.textContent;
       code.parentElement.replaceWith(div);
     });
-    // 2) 渲染 mermaid
-    try { await mermaid.run({ nodes: content.querySelectorAll('.mermaid') }); }
-    catch (e) { console.warn('mermaid:', e); }
-    // 2.5) 给每张图加右上角放大按钮
-    content.querySelectorAll('.mermaid').forEach(box => {
-      const svg = box.querySelector('svg');
-      if (!svg || box.querySelector('.zoom-btn')) return;
-      const btn = document.createElement('button');
-      btn.type = 'button'; btn.className = 'zoom-btn'; btn.title = '点击放大'; btn.textContent = '🔍';
-      btn.addEventListener('click', () => openZoom(svg));
-      box.appendChild(btn);
-    });
+    // 2) 渲染 mermaid + 放大按钮
+    await renderMermaidIn(content);
     // 3) 其余代码块高亮
     content.querySelectorAll('pre code:not(.language-mermaid)').forEach(el => {
       try { hljs.highlightElement(el); } catch(e) {}
@@ -476,6 +534,40 @@ sequenceDiagram
   window.addEventListener('hashchange', () => render((location.hash||'#home').slice(1)));
   document.getElementById('toggle').addEventListener('click', () =>
     document.getElementById('sidebar').classList.toggle('open'));
+
+  // ===== 主题（亮/暗）切换 =====
+  const HLJS = {
+    light:'https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css',
+    dark: 'https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css',
+  };
+  const themeBtn = document.getElementById('theme-toggle');
+  const resolveMode = pref => (pref === 'dark' ||
+    (pref === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches)) ? 'dark' : 'light';
+  function applyTheme(pref, persist) {
+    const mode = resolveMode(pref);
+    const root = document.documentElement;
+    root.setAttribute('data-theme', mode);
+    root.setAttribute('data-theme-pref', pref);
+    if (persist) { try { localStorage.setItem('wiki-theme', pref); } catch (e) {} }
+    const link = document.getElementById('hljs-theme');
+    if (link) link.href = HLJS[mode];           // 代码高亮跟随：github ↔ github-dark
+    if (themeBtn) {
+      themeBtn.textContent = mode === 'dark' ? '☀' : '☾';
+      themeBtn.title = mode === 'dark' ? '切换到亮色' : '切换到暗色';
+    }
+  }
+  if (themeBtn) themeBtn.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    applyTheme(cur === 'dark' ? 'light' : 'dark', true);
+  });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    const pref = (function () { try { return localStorage.getItem('wiki-theme'); } catch (e) { return null; } })()
+                 || document.documentElement.getAttribute('data-default-theme') || 'light';
+    if (pref === 'auto') applyTheme('auto', false);
+  });
+  const initialPref = (function () { try { return localStorage.getItem('wiki-theme'); } catch (e) { return null; } })()
+                      || document.documentElement.getAttribute('data-default-theme') || 'light';
+  applyTheme(initialPref, false);           // 同步早期脚本已设主题，并修正 hljs 配色与按钮图标
 
   render((location.hash||'#home').slice(1));
 </script>

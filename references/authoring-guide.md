@@ -41,12 +41,14 @@
 - 文档之间用相对 `.md` 链接（构建后自动变成站内跳转）。
 
 ### P3 · 构建（带闸门）
+**先用 AskUserQuestion 问默认主题**：亮色 / 暗色 / 跟随系统 → 对应 `--theme light|dark|auto`（读者仍可在页面右上角 ☾/☀ 切换，Mermaid 会随主题重渲）。
 ```bash
-python3 lint_mermaid.py docs/                                   # ① 静态校验，必过
-python3 build_wiki.py --config wiki.config.json --lint          # ② 构建（--lint 再兜底一次）
-python3 check_render.py docs/                                   # ③ 可选：真渲染检查（需 Chrome）
+python3 lint_mermaid.py docs/                                          # ① 静态校验，必过
+python3 build_wiki.py --config wiki.config.json --theme <答案> --lint  # ② 构建（--lint 再兜底）
+python3 check_render.py docs/                                          # ③ 可选：真渲染检查（需 Chrome）
 ```
 `lint` 报 ERROR 必须先修；`build_wiki.py --lint` 发现 ERROR 会拒绝产出半成品。
+> 暗色主题下 **Mermaid 图保持浅色面板（深字浅底）**，所以图里手写的 `style X fill:#浅色` 高亮在亮/暗下都清晰，放心用。
 
 ### P4 · 质检与迭代
 - **对照代码 fact-check**：可调用 `fact-check` skill，确认文档与实现一致（别写代码里没有的东西）。

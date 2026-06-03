@@ -136,6 +136,8 @@ def main():
     ap.add_argument("--brand", help="侧边栏品牌名")
     ap.add_argument("--subtitle", help="品牌副标题")
     ap.add_argument("--footer", help="侧边栏页脚")
+    ap.add_argument("--theme", choices=["light", "dark", "auto"],
+                    help="默认主题：light(默认) / dark / auto(跟随系统)。读者仍可在页面右上角切换")
     ap.add_argument("--lint", action="store_true",
                     help="构建前用 lint_mermaid 静态检查所有 mermaid 图，发现 ERROR 则中止")
     args = ap.parse_args()
@@ -178,12 +180,14 @@ def main():
     subtitle = args.subtitle or cfg.get("subtitle") or ""
     title = args.title or cfg.get("title") or re.sub(r"<[^>]+>", "", brand).strip()
     footer = args.footer or cfg.get("footer") or "由 wiki-vis 生成 · 改 .md 后重跑即可更新"
+    theme = args.theme or cfg.get("theme") or "light"
 
     replacements = {
         "{{TITLE}}": title,
         "{{BRAND}}": brand,
         "{{SUBTITLE}}": subtitle,
         "{{FOOT}}": footer,
+        "{{THEME}}": theme,
         "{{NAV}}": build_nav(pages),
         "{{PAGES}}": build_pages(pages),
         "{{FILE_TO_ID}}": build_file_map(pages),
@@ -193,7 +197,7 @@ def main():
         html = html.replace(k, v)
 
     out_path.write_text(html, encoding="utf-8")
-    print(f"✓ 已生成 {out_path}  （{len(pages)} 页, {out_path.stat().st_size // 1024} KB）")
+    print(f"✓ 已生成 {out_path}  （{len(pages)} 页, {out_path.stat().st_size // 1024} KB, 默认主题 {theme}）")
     for p in pages:
         print(f"    · {p['nav']}  ←  {p['file']}")
 

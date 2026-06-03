@@ -6,7 +6,11 @@ A **standard project-wiki solution**: let [Claude Code](https://claude.com/claud
 
 中文说明见 [README_cn.md](README_cn.md)。
 
-![wiki-vis screenshot](assets/screenshot.png)
+![wiki-vis — light](assets/screenshot.png)
+
+*Light theme. A dark theme is built in too — toggle ☾/☀ in the header (persisted), or set the default at build time with `--theme dark`:*
+
+![wiki-vis — dark](assets/screenshot-dark.png)
 
 ---
 
@@ -23,6 +27,7 @@ A **standard project-wiki solution**: let [Claude Code](https://claude.com/claud
 - **Section frames** — `H2/H3/H4…` automatically wrapped in solid-color title bars (blue / green / amber / red by depth), **click to collapse**, with expand/collapse-all
 - **Top stat bar** — counts of sections / subsections / diagrams / tables
 - **Mermaid diagrams** — themed to match the page + rounded shadow; every diagram gets a **🔍 zoom overlay** (wheel zoom, drag to pan, Esc to close)
+- **Light / dark theme** — every wiki has a ☾/☀ toggle (persisted in `localStorage`); pick the default with `--theme light|dark|auto`. Code highlighting follows (github ↔ github-dark); Mermaid renders on a light panel that stays readable in both modes
 - **Code highlighting** (highlight.js), styled tables and blockquotes
 - **Internal `.md` links** rewired to in-page navigation; prev / next pager
 - **Diagram quality gate** — `lint_mermaid.py` statically catches the Mermaid pitfalls that cause `Syntax error`; `check_render.py` renders every diagram via headless Chrome to catch the rest

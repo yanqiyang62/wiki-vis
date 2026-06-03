@@ -60,7 +60,14 @@ python3 build_wiki.py --docs docs --out wiki.html
 ```bash
 python3 build_wiki.py --config wiki.config.json
 ```
-`pages[].nav` 可含 emoji/⭐ 等；`pages[].id` 用于 URL 锚点与内部 `.md` 链接互跳（缺省自动推导）。CLI 参数（`--title/--brand/--subtitle/--footer/--docs/--out`）优先级高于配置。
+`pages[].nav` 可含 emoji/⭐ 等；`pages[].id` 用于 URL 锚点与内部 `.md` 链接互跳（缺省自动推导）。CLI 参数（`--title/--brand/--subtitle/--footer/--docs/--out/--theme`）优先级高于配置。
+
+## 主题（亮 / 暗）
+每份 wiki **都带运行时切换**（侧边栏品牌头右上角 ☾/☀，状态存 `localStorage`，Mermaid 图随主题重渲）。生成时用 `--theme` 设默认（也可在 config 写 `"theme"`）：
+```bash
+python3 build_wiki.py --config wiki.config.json --theme dark   # light(默认) / dark / auto(跟随系统)
+```
+> 给项目生成 wiki 时，**先问用户要哪种默认主题**再构建（见下「执行提示 A」）。暗色下页面变深，但 **Mermaid 图保持浅色面板（深字浅底）**——保证字清晰、也保留图里手写的高亮填充色；代码高亮切到 github-dark。
 
 ## 安装到其它项目 / 服务器
 整个 `wiki-vis/` 目录拷过去即可，三种放法任选：
@@ -72,6 +79,7 @@ python3 build_wiki.py --config wiki.config.json
 
 ## 给 Claude 的执行提示
 **A. 用户要「给项目生成 wiki / 梳理链路 / 让新人看懂」** → 这是主场景，先读 [`references/authoring-guide.md`](references/authoring-guide.md) 按五阶段执行：侦察项目 → 定骨架+写 `wiki.config.json` → 图优先写 `docs/*.md` → `lint`+`build` → 质检。务必满足该文 §0 的 Definition of Done（含「多 Agent 如何被 Claude Code 执行」）。
+> 构建前**用 AskUserQuestion 问用户默认主题**：亮色 / 暗色 / 跟随系统，再以 `--theme light|dark|auto` 生成（读者仍可在页面右上角 ☾/☀ 随时切换）。
 
 **B. 已有 docs，只要 HTML** →
 1. 定位 Markdown 目录（常见 `docs/`、`doc/`、`wiki/`、仓库根的 `*.md`）。
