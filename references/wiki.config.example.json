@@ -6,11 +6,14 @@
   "docs": "docs",
   "out": "wiki.html",
   "pages": [
-    { "file": "README.md",        "id": "home",     "nav": "🏠 首页 / 导航" },
-    { "file": "01-项目总览.md",    "id": "overview", "nav": "01 · 项目总览" },
-    { "file": "02-架构设计.md",    "id": "arch",     "nav": "02 · 架构设计 ⭐" },
-    { "file": "03-数据模型.md",    "id": "data",     "nav": "03 · 数据模型与 E-R 图" },
-    { "file": "04-接口文档.md",    "id": "api",      "nav": "04 · 接口文档" },
-    { "file": "05-FAQ.md",         "id": "faq",      "nav": "05 · 术语表与 FAQ" }
+    { "file": "README.md",            "id": "home",     "nav": "🏠 首页 / 阅读路线" },
+    { "file": "01-项目总览.md",        "id": "overview", "nav": "01 · 项目总览" },
+    { "file": "02-核心机制.md",        "id": "core",     "nav": "02 · 核心机制 ⭐" },
+    { "file": "03-端到端链路.md",      "id": "flow",     "nav": "03 · 端到端链路" },
+    { "file": "04-模块详解.md",        "id": "modules",  "nav": "04 · 模块详解" },
+    { "file": "05-数据模型与ER图.md",  "id": "data",     "nav": "05 · 数据模型与 E-R 图" },
+    { "file": "06-工具链与脚本.md",    "id": "tools",    "nav": "06 · 工具链与脚本" },
+    { "file": "07-运行部署与迭代.md",  "id": "ops",      "nav": "07 · 运行部署与迭代" },
+    { "file": "08-术语表与FAQ.md",     "id": "faq",      "nav": "08 · 术语表与 FAQ" }
   ]
 }

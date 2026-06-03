@@ -1,11 +1,15 @@
 ---
 name: wiki-vis
-description: 把一个 Markdown 文档目录打包成单文件、可视化的 wiki.html（紫靛渐变 + Tailwind slate 风格）。内置侧边栏导航、按标题层级自动折叠的实色框体、顶部彩色统计条、Mermaid 同色系主题与图片放大浮层、代码高亮、上一页/下一页。当用户想把 docs/ 里的 .md 生成好看的离线可分享 wiki / 项目文档站 / 知识库单页，或提到「生成 wiki、文档站、把 markdown 变成网页、复用这套板式」时使用。
+description: 给一个代码项目生成「标准项目 wiki」：系统分析项目→在 docs/ 写多文档（流程图/E-R图/时序图，按模块拆分，讲清多 Agent 如何被 Claude Code 执行）→打包成单文件可视化 wiki.html（紫靛渐变 + Tailwind slate 风格：侧边栏、按标题层级折叠的框体、彩色统计条、Mermaid 同色系主题与图片放大、代码高亮）。也能把现成的 docs/*.md 直接转成 wiki。当用户提到「生成项目 wiki / 项目文档站 / 梳理项目链路流程 / 把 markdown 变 html / 复用这套板式 / 说清楚多 agent 怎么跑 / 给项目写文档让新人看懂」时使用。
 ---
 
-# wiki-vis — Markdown → 单文件可视化 Wiki
+# wiki-vis — 项目 → 单文件可视化 Wiki
 
-把一个装着 `.md` 的目录，生成**一个自包含的 `wiki.html`**（双击即可在浏览器看，可拷给别人 / 部署到任意静态服务器）。
+两件事：**①（写作层）系统分析一个代码项目，在 `docs/` 写出一套新人也能读懂的多文档 wiki（大量图）；②（构建层）把 `docs/*.md` 打包成一个自包含的 `wiki.html`**（双击即看，可分发 / 部署到任意静态服务器）。
+
+## 两种用法
+- **从零给项目生成 wiki（推荐，完整链路）**：先读 **[`references/authoring-guide.md`](references/authoring-guide.md)**，按其五阶段流程（侦察→信息架构→图优先写作→构建→质检）产出 `docs/` 与 `wiki.html`。这是「标准项目 wiki 方案」，含「多 Agent 如何被 Claude Code 执行」的讲法与所有 Mermaid 图模板。
+- **已有 docs，只要 HTML**：直接跳到下面「怎么用」构建即可。
 
 ## 能力一览（全部已内置在模板里，无需后端）
 - **侧边栏导航** + 紫靛渐变品牌头（Tailwind slate 配色）
@@ -19,10 +23,13 @@ description: 把一个 Markdown 文档目录打包成单文件、可视化的 wi
 ```
 wiki-vis/
 ├── SKILL.md
-├── build_wiki.py          # 生成脚本（纯 Python3 标准库，零依赖）
+├── build_wiki.py          # 构建：docs/*.md → wiki.html（纯 Python3 标准库，零依赖）
+├── lint_mermaid.py        # 图质量闸门：静态扫描 mermaid 雷区，报 file:line
+├── check_render.py        # 可选：用 Chrome 真渲染所有图，抓语义级失败
 ├── template.html          # 模板壳：CSS + JS 引擎 + {{占位符}}
 └── references/
-    └── wiki.config.example.json
+    ├── authoring-guide.md       # ⭐ 写作层：读项目→多文档多图 wiki 的完整流程
+    └── wiki.config.example.json # 标准 8 篇骨架的配置模板
 ```
 
 ## 怎么用
@@ -64,12 +71,19 @@ python3 build_wiki.py --config wiki.config.json
 > 只依赖 Python 3 标准库，无需 pip 安装。
 
 ## 给 Claude 的执行提示
-当用户要「生成 wiki / 文档站」：
+**A. 用户要「给项目生成 wiki / 梳理链路 / 让新人看懂」** → 这是主场景，先读 [`references/authoring-guide.md`](references/authoring-guide.md) 按五阶段执行：侦察项目 → 定骨架+写 `wiki.config.json` → 图优先写 `docs/*.md` → `lint`+`build` → 质检。务必满足该文 §0 的 Definition of Done（含「多 Agent 如何被 Claude Code 执行」）。
+
+**B. 已有 docs，只要 HTML** →
 1. 定位 Markdown 目录（常见 `docs/`、`doc/`、`wiki/`、仓库根的 `*.md`）。
-2. 若需要漂亮的导航顺序与标题，先写 `wiki.config.json`；否则直接自动模式。
-3. 跑 `python3 <skill>/build_wiki.py --config ...` 或 `--docs ...`。
-4. 用 `open wiki.html`（macOS）/ `xdg-open`（Linux）打开给用户预览。
-5. 要改外观，编辑 `template.html` 的 `<style>`（设计令牌在 `:root` 的 `--c-*`、`--grad`）。
+2. 需要漂亮的导航顺序/标题就先写 `wiki.config.json`；否则自动模式。
+3. **先校验再构建**：`python3 <skill>/lint_mermaid.py docs/` → `python3 <skill>/build_wiki.py --config ... --lint`。
+4. `open wiki.html`（macOS）/ `xdg-open`（Linux）预览；有 Chrome 可 `python3 <skill>/check_render.py docs/` 深度验图。
+5. 改外观编辑 `template.html` 的 `<style>`（设计令牌在 `:root` 的 `--c-*`、`--grad`）。
+
+## 图质量工具链（避免 mermaid `Syntax error`）
+- `python3 lint_mermaid.py docs/`：静态扫描所有 ```mermaid 块，报 `file:line` + 修复建议（捕获 `\"` 转义引号、`-.标签.->` 含 `.`/`"` 等真实雷区）。ERROR 退出码 1。
+- `python3 build_wiki.py --lint ...`：构建前自动跑上面的检查，发现 ERROR 拒绝产出半成品。
+- `python3 check_render.py docs/`：把每张图真渲染一遍（headless Chrome），抓静态规则漏掉的语义级失败；无 Chrome 则跳过。
 
 ## 注意
 - **联网渲染**：模板用 CDN 加载 `marked / mermaid / highlight.js`，查看页面时需联网。

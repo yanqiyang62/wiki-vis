@@ -136,6 +136,8 @@ def main():
     ap.add_argument("--brand", help="侧边栏品牌名")
     ap.add_argument("--subtitle", help="品牌副标题")
     ap.add_argument("--footer", help="侧边栏页脚")
+    ap.add_argument("--lint", action="store_true",
+                    help="构建前用 lint_mermaid 静态检查所有 mermaid 图，发现 ERROR 则中止")
     args = ap.parse_args()
 
     cfg = {}
@@ -155,6 +157,22 @@ def main():
     if not pages:
         print(f"✗ 在 {docs_dir} 下没找到任何 .md 文件。", file=sys.stderr)
         sys.exit(1)
+
+    # 可选：构建前做 mermaid 静态检查，发现 ERROR 即中止（不产出半成品）
+    if args.lint:
+        try:
+            from lint_mermaid import lint_paths, ERR
+        except ImportError:
+            print("⚠ 找不到 lint_mermaid.py，跳过 --lint。", file=sys.stderr)
+        else:
+            findings = lint_paths([docs_dir / p["file"] for p in pages])
+            errs = [f for f in findings if f[2] == ERR]
+            for fpath, ln, sev, msg, snip in findings:
+                print(f"  [{sev}] {fpath}:{ln}  {msg}", file=sys.stderr)
+            if errs:
+                print(f"✗ mermaid 检查发现 {len(errs)} 个 ERROR，已中止构建。"
+                      f"修复后重试，或去掉 --lint。", file=sys.stderr)
+                sys.exit(2)
 
     brand = args.brand or cfg.get("brand") or "📚 Wiki"
     subtitle = args.subtitle or cfg.get("subtitle") or ""

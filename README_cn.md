@@ -1,12 +1,19 @@
 # wiki-vis
 
-把一个 **Markdown 目录** 打包成 **一个自包含、可视化的 `wiki.html`** —— 双击即可在浏览器查看，可直接拷给别人或部署到任意静态服务器。
+**标准项目 wiki 方案**：让 [Claude Code](https://claude.com/claude-code) 系统分析一个代码项目，在 `docs/` 写出一套新人也能读懂的多文档、多图 wiki，再打包成 **一个自包含、可视化的 `wiki.html`** —— 双击即看，可拷给别人或部署到任意静态服务器。（也能把现成的 Markdown 直接转换。）
 
-> 紫靛渐变 + Tailwind slate 配色，自带侧边栏导航、按标题层级折叠的章节框体、Mermaid 图与图片放大、代码高亮。既能当命令行工具用，也是一个 [Claude Code](https://claude.com/claude-code) Skill。
+> 紫靛渐变 + Tailwind slate 配色，自带侧边栏导航、按标题层级折叠的章节框体、Mermaid 图与图片放大、代码高亮。既能当命令行工具用，也是一个 Claude Code Skill。
 
 English: [README.md](README.md)。
 
 ![wiki-vis 截图](assets/screenshot.png)
+
+---
+
+## 🧭 两种用法
+
+- **给项目生成 wiki（主场景）** —— 把 Claude Code 指向一个仓库，它按 [`references/authoring-guide.md`](references/authoring-guide.md) 的五阶段执行：侦察 → 信息架构 → 图优先写作 → lint → 构建 → 质检。产出新人友好、图很多（流程图 / E-R / 时序）的 `docs/` 与 HTML，并讲清「**多 Agent 是怎么被 Claude Code 执行的**」。
+- **已有 Markdown，只要 HTML** —— 直接看下面的构建命令。
 
 ---
 
@@ -18,6 +25,7 @@ English: [README.md](README.md)。
 - **Mermaid 图**：与页面同色系主题 + 圆角投影；每张图右上角 **🔍 放大浮层**（滚轮缩放、拖拽平移、Esc 关闭）
 - **代码高亮**（highlight.js）、表格、引用块统一风格
 - **内部 `.md` 链接互跳**、上一页 / 下一页
+- **图质量闸门** —— `lint_mermaid.py` 静态抓出会导致 `Syntax error` 的 Mermaid 雷区；`check_render.py` 用无头 Chrome 真渲染每张图兜底
 - **单文件输出**、纯前端、零后端；构建脚本只依赖 Python 3 标准库
 
 ---
@@ -25,11 +33,14 @@ English: [README.md](README.md)。
 ## 🚀 快速开始
 
 ```bash
+# 先校验 Mermaid（推荐），再构建
+python3 lint_mermaid.py docs/
+
 # 自动模式：扫描 docs/，README/index 置顶，其余按文件名排序
-python3 build_wiki.py --docs docs --out wiki.html
+python3 build_wiki.py --docs docs --out wiki.html --lint
 
 # 或用配置文件控制顺序 / 标题 / 品牌
-python3 build_wiki.py --config wiki.config.json
+python3 build_wiki.py --config wiki.config.json --lint
 ```
 
 打开看看：
@@ -118,10 +129,14 @@ git clone https://github.com/yanqiyang62/wiki-vis.git .claude/skills/wiki-vis
 
 ```
 wiki-vis/
-├── build_wiki.py                    # 生成脚本（纯 Python3 标准库）
+├── build_wiki.py                    # 构建：docs/*.md → wiki.html（纯 Python3 标准库）
+├── lint_mermaid.py                  # Mermaid 静态校验（file:line + 修复建议）
+├── check_render.py                  # 可选：无头 Chrome 真渲染每张图
 ├── template.html                    # 模板壳：CSS + JS 引擎 + {{占位符}}
 ├── SKILL.md                         # Claude Code skill 清单
-├── references/wiki.config.example.json
+├── references/
+│   ├── authoring-guide.md           # 项目 → 多文档 wiki 工作流（写作层 / the brain）
+│   └── wiki.config.example.json
 ├── examples/docs/                   # 可直接构建的示例文档
 └── assets/screenshot.png
 ```
