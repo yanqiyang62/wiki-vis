@@ -137,15 +137,6 @@ git clone https://github.com/yanqiyang62/wiki-vis.git .claude/skills/wiki-vis   
 
 ---
 
-## 🖼️ Mermaid 小贴士（避免 `Syntax error`）
-
-这两条 `lint_mermaid.py` 都会自动检查，一般无需死记：
-
-- 节点文字里的 `"` 写成 `#34;`、`#` 写成 `#35;`（`\` 转义无效）。
-- 带标签的边若标签含 `. / : ( )`，用管道写法 `A -.->|标签| B`，别用 `A -.标签.-> B`。
-
----
-
 ## 🎨 自定义主题
 
 设计令牌都在 `template.html` 的 `:root`：

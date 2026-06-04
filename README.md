@@ -137,15 +137,6 @@ Then just tell Claude *“turn my project into a wiki”*.
 
 ---
 
-## 🖼️ Mermaid tips (avoid `Syntax error`)
-
-Both are enforced by `lint_mermaid.py`, so you usually don't have to remember them:
-
-- Put `"` in node text as `#34;` and `#` as `#35;` — `\` escaping does **not** work.
-- For a labelled edge whose label contains `. / : ( )`, use the pipe form `A -.->|label| B` instead of `A -.label.-> B`.
-
----
-
 ## 🎨 Theming
 
 Design tokens live in `:root` of `template.html`:
