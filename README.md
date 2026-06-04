@@ -35,23 +35,33 @@ A standard project-wiki solution for [Claude Code](https://claude.com/claude-cod
 
 ---
 
+## 📖 What a generated wiki looks like
+
+Every page is **diagram-first** — flowcharts for pipelines, E-R for data models, sequence diagrams for interactions.
+
+<div align="center">
+<img alt="A pipeline flowchart inside a generated wiki" src="assets/screenshot-flow.png" width="820">
+<br><sub>The 10-phase pipeline page from the showcase wiki.</sub>
+</div>
+
+---
+
 ## 🧭 Two ways to use it
 
-**1 · Author a project wiki** *(the main use)* — point Claude Code at a repo. It follows [`references/authoring-guide.md`](references/authoring-guide.md):
-
-```
-recon → information architecture → diagram-first writing → lint → build → review
-```
-
-…and produces a newcomer-friendly, heavily-diagrammed `docs/` set (flowcharts, E-R, sequence) plus the HTML — including *how a multi-agent system is actually executed by Claude Code*.
-
-**2 · Convert existing Markdown** — already have `docs/*.md`? Jump straight to the commands below.
+- **Author a project wiki** *(the main use)* — point Claude Code at a repo; it researches the code and writes a newcomer-friendly, diagram-rich `docs/` set (flowcharts, E-R, sequence), then builds the HTML — including *how a multi-agent system is executed by Claude Code*. Driven by [`references/authoring-guide.md`](references/authoring-guide.md).
+- **Convert existing Markdown** — already have `docs/*.md`? Jump straight to the commands below.
 
 ---
 
 ## 🛠 How it works
 
-In short: `build_wiki.py` fills a single self-contained template (`template.html`) with your `docs/*.md` and emits one `wiki.html` that renders itself in the browser. When Claude Code authors a wiki from a project, it follows a short pipeline — read the code, lay out the docs, write diagram-first, lint, build, review — detailed in [`references/authoring-guide.md`](references/authoring-guide.md).
+`build_wiki.py` fills the `{{placeholders}}` in `template.html` with your `docs/*.md` and emits one self-contained `wiki.html` that renders itself in the browser. When Claude Code authors a wiki from a project, it runs a short, repeatable pipeline:
+
+```
+recon → information architecture → diagram-first writing → lint → build → review
+```
+
+…detailed in [`references/authoring-guide.md`](references/authoring-guide.md).
 
 ---
 

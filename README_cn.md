@@ -35,23 +35,33 @@
 
 ---
 
+## 📖 生成的 wiki 长什么样
+
+每一页都**图优先**——流程图讲链路、E-R 图讲数据模型、时序图讲交互。
+
+<div align="center">
+<img alt="生成的 wiki 里的流程图页面" src="assets/screenshot-flow.png" width="820">
+<br><sub>展示 wiki 里「端到端链路（10 阶段）」的流程图页面。</sub>
+</div>
+
+---
+
 ## 🧭 两种用法
 
-**1 · 给项目生成 wiki**（主场景）—— 把 Claude Code 指向一个仓库，它按 [`references/authoring-guide.md`](references/authoring-guide.md) 执行：
-
-```
-侦察 → 信息架构 → 图优先写作 → lint → 构建 → 质检
-```
-
-产出新人友好、图很多（流程图 / E-R / 时序）的 `docs/` 与 HTML —— 并讲清「**多 Agent 是怎么被 Claude Code 执行的**」。
-
-**2 · 转换现成 Markdown** —— 已经有 `docs/*.md`？直接看下面的命令。
+- **给项目生成 wiki**（主场景）—— 把 Claude Code 指向一个仓库，它会研究代码、写出新人友好、图很多（流程图 / E-R / 时序）的 `docs/`，再构建出 HTML —— 并讲清「**多 Agent 是怎么被 Claude Code 执行的**」。由 [`references/authoring-guide.md`](references/authoring-guide.md) 驱动。
+- **转换现成 Markdown** —— 已经有 `docs/*.md`？直接看下面的命令。
 
 ---
 
 ## 🛠 原理
 
-简单说：`build_wiki.py` 把你的 `docs/*.md` 填进一个自包含模板（`template.html`），产出一个能自行在浏览器里渲染的 `wiki.html`。当 Claude Code 从项目生成 wiki 时，按一条简短流程走——读代码、定结构、图优先写作、lint、构建、质检，细节见 [`references/authoring-guide.md`](references/authoring-guide.md)。
+`build_wiki.py` 把你的 `docs/*.md` 填进 `template.html` 的 `{{占位符}}`，产出一个能自行在浏览器里渲染的自包含 `wiki.html`。当 Claude Code 从项目生成 wiki 时，会走一条简短、可复用的流水线：
+
+```
+侦察 → 信息架构 → 图优先写作 → lint → 构建 → 质检
+```
+
+细节见 [`references/authoring-guide.md`](references/authoring-guide.md)。
 
 ---
 
