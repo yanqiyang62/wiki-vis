@@ -16,7 +16,7 @@
 
 <img alt="wiki-vis 截图" src="assets/screenshot.png" width="860">
 
-<sub>截图是 wiki-vis 给 <b>academic-research-skills</b> 仓库生成的真实 wiki —— <a href="https://yanqiyang62.github.io/wiki-vis/">在线查看 ↗</a> &nbsp;·&nbsp; 源文件 <a href="examples/wiki2.html"><code>examples/wiki2.html</code></a></sub>
+<sub>截图是 wiki-vis 为 <a href="https://github.com/imbad0202/academic-research-skills"><b>imbad0202/academic-research-skills</b></a> 生成的真实 wiki —— <a href="https://yanqiyang62.github.io/wiki-vis/">在线查看 ↗</a> &nbsp;·&nbsp; 源文件 <a href="examples/wiki2.html"><code>examples/wiki2.html</code></a></sub>
 
 </div>
 
@@ -41,7 +41,7 @@
 
 <div align="center">
 <img alt="生成的 wiki 里的流程图页面" src="assets/screenshot-flow.png" width="820">
-<br><sub>展示 wiki 里「端到端链路（10 阶段）」的流程图页面。</sub>
+<br><sub>这是 wiki-vis 为 <a href="https://github.com/imbad0202/academic-research-skills">imbad0202/academic-research-skills</a> 生成的 wiki 里「端到端链路（10 阶段）」页面（用作展示示例，版权归原项目作者）。</sub>
 </div>
 
 ---
@@ -182,6 +182,12 @@ wiki-vis/
 │   └── wiki2.html                # 展示用：academic-research-skills 生成的成品 wiki
 └── assets/                       # 截图
 ```
+
+---
+
+## 🙏 致谢
+
+在线 demo 与展示截图，是 wiki-vis 为 [**imbad0202/academic-research-skills**](https://github.com/imbad0202/academic-research-skills) 项目生成的 wiki —— 感谢原作者。此处仅用于演示 wiki-vis 的产出效果，该项目版权归其作者所有。
 
 ---
 
