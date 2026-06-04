@@ -67,6 +67,8 @@
 
 ## 🚀 快速开始
 
+> **环境要求：** Python 3.7+ —— 仅用标准库，无需 `pip install`。
+
 ```bash
 python3 lint_mermaid.py docs/                              # 1.（推荐）先校验，提前抓出坏图
 python3 build_wiki.py --docs docs --out wiki.html --lint   # 2. 自动模式：README/index 置顶，其余按名排序
@@ -173,6 +175,12 @@ wiki-vis/
 │   └── wiki2.html                # 展示用：academic-research-skills 生成的成品 wiki
 └── assets/                       # 截图
 ```
+
+---
+
+## 🤝 参与贡献
+
+欢迎提 Issue 和 PR —— 给 [`references/authoring-guide.md`](references/authoring-guide.md) 加 Mermaid 模板、做新的 `template.html` 皮肤、或打磨构建脚本都很合适。提交前请先跑 `python3 lint_mermaid.py examples/docs`。
 
 ---
 

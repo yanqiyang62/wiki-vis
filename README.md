@@ -67,6 +67,8 @@ recon → information architecture → diagram-first writing → lint → build 
 
 ## 🚀 Quick start
 
+> **Requirements:** Python 3.7+ — standard library only, no `pip install`.
+
 ```bash
 python3 lint_mermaid.py docs/                              # 1. (recommended) catch diagram errors early
 python3 build_wiki.py --docs docs --out wiki.html --lint   # 2. auto mode: README/index first, rest by name
@@ -173,6 +175,12 @@ wiki-vis/
 │   └── wiki2.html                # showcase: a wiki generated from academic-research-skills
 └── assets/                       # screenshots
 ```
+
+---
+
+## 🤝 Contributing
+
+Issues and pull requests are welcome — extra Mermaid templates in [`references/authoring-guide.md`](references/authoring-guide.md), new `template.html` skins, or build-script polish all make good PRs. Please run `python3 lint_mermaid.py examples/docs` before submitting.
 
 ---
 
