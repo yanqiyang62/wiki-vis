@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-theme="auto">
+<html lang="zh-CN" data-default-theme="light">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>wiki-vis — live demo</title>
+<title>Academic Research Skills · 项目 Wiki</title>
 <script>
   /* 尽早设定主题，避免暗色刷新闪白（FOUC） */
   (function () {
@@ -205,12 +205,19 @@
 <body>
   <button id="toggle">☰ 目录</button>
   <nav id="sidebar">
-    <div class="brand"><button id="theme-toggle" type="button" title="切换亮/暗主题">☾</button>📚 wiki-vis<small>live demo · sample wiki</small></div>
+    <div class="brand"><button id="theme-toggle" type="button" title="切换亮/暗主题">☾</button>📚 ARS Wiki<small>面向 Claude Code 的学术研究技能套件 · v3.10.0</small></div>
     <ul>
-      <li><a href="#readme" data-target="readme">🏠 首页 / 导航</a></li>
-      <li><a href="#01" data-target="01">01 · 架构示例</a></li>
+      <li><a href="#home" data-target="home">🏠 首页 / 阅读路线</a></li>
+      <li><a href="#overview" data-target="overview">01 · 项目总览</a></li>
+      <li><a href="#agents" data-target="agents">02 · 多 Agent 执行机制 ⭐</a></li>
+      <li><a href="#pipeline" data-target="pipeline">03 · 端到端链路（10 阶段）</a></li>
+      <li><a href="#skills" data-target="skills">04 · 四大技能详解</a></li>
+      <li><a href="#data" data-target="data">05 · 数据模型与 E-R 图</a></li>
+      <li><a href="#gates" data-target="gates">06 · 质量闸门与诚信机制</a></li>
+      <li><a href="#toolchain" data-target="toolchain">07 · 工具链 / 打包 / 钩子</a></li>
+      <li><a href="#glossary" data-target="glossary">08 · 术语表与 FAQ</a></li>
     </ul>
-    <div class="foot">由 wiki-vis 生成 · 改 .md 后重跑即可更新</div>
+    <div class="foot">由 wiki-vis 生成 · 改 wiki/*.md 后重跑 build_wiki.py 即可更新</div>
   </nav>
   <div id="main"><article id="content">加载中…</article></div>
 
@@ -226,92 +233,1381 @@
     <div class="zoom-stage" id="zoom-stage"></div>
   </div>
 
-  <script type="text/markdown" data-id="readme">
-# 示例 Wiki
+  <script type="text/markdown" data-id="home">
+# Academic Research Skills（ARS）项目 Wiki
 
-> **wiki-vis 演示**：这一份 `examples/docs/` 用来展示生成效果。运行
-> `python3 build_wiki.py --docs examples/docs --out examples/wiki.html` 即可重建本页。
+> 一句话定位：**ARS 是一套装进 Claude Code 的「学术研究流水线」——把一个研究想法，经由 research → write → review → revise → finalize 五大环节，变成一篇可投稿、引用可核验的论文；全程由人类把关，AI 只做苦力活。**
 
-本示例覆盖了常见元素：多级标题折叠框体、Mermaid 流程图、表格、代码块、内部链接。
+这套项目不是一个会跑起来的网站或后端服务，而是**一组 Markdown「剧本」+ 一批 Markdown「Agent 人设」+ 一堆 Python 校验脚本**。Claude Code 读这些剧本，按步骤派发子 Agent 干活。如果你从没接触过它，按下面的「阅读路线」走，30 分钟就能建立完整心智模型。
 
 ---
 
-## 1 它能做什么
+## 这份 Wiki 讲什么
 
-把若干 `.md` 文件变成**一个**好看的 `wiki.html`：左侧导航、章节可折叠、图可放大。
+```mermaid
+mindmap
+  root((ARS 项目 Wiki))
+    它是什么
+      4 个技能
+      约 38 个 Agent
+      25 种模式
+      人在环中
+    它怎么跑
+      Claude 读 SKILL.md
+      Task 工具派发子 Agent
+      Material Passport 黑板
+      Hook 守边界
+    主流程
+      研究 → 写作
+      诚信闸门 2.5
+      评审 → 修订
+      诚信闸门 4.5
+      定稿
+    数据怎么流
+      Material Passport
+      13 个交接 Schema
+      文献语料输入口
+    质量怎么保
+      7 模式失败清单
+      反谄媚 / 反泄漏
+      引用幻觉检测 L3
+    工具与打包
+      154 个脚本
+      插件 / 斜杠命令
+      钩子 / CI
+```
+
+## 阅读路线（推荐顺序）
+
+| 顺序 | 文档 | 读完你会知道 | 给谁 |
+|---|---|---|---|
+| 1 | [01 · 项目总览](01-项目总览.md) | ARS 解决什么问题、4 个技能怎么分工、目录长什么样 | 所有人 |
+| 2 | [02 · 多 Agent 执行机制 ⭐](02-多Agent执行机制.md) | **没有外部框架，多 Agent 到底怎么被 Claude Code 跑起来** | 想懂原理的人 |
+| 3 | [03 · 端到端链路](03-端到端链路.md) | 从一句话需求到定稿，10 个阶段每步发生什么、在哪等你拍板 | 想用它的人 |
+| 4 | [04 · 四大技能详解](04-四大技能详解.md) | 每个技能的 Agent 阵容、模式、输入输出 | 想深入某一环的人 |
+| 5 | [05 · 数据模型与 E-R 图](05-数据模型与ER图.md) | Material Passport 和 13 个交接契约怎么串起整条链路 | 想改数据结构的人 |
+| 6 | [06 · 质量闸门与诚信机制](06-质量闸门与诚信机制.md) | 7 模式失败清单、反谄媚、引用幻觉（L3）等防线 | 关心可靠性的人 |
+| 7 | [07 · 工具链 / 打包 / 钩子](07-工具链与打包.md) | 脚本、插件安装、斜杠命令、Hook、CI 怎么组织 | 维护者 / 贡献者 |
+| 8 | [08 · 术语表与 FAQ](08-术语表与FAQ.md) | 一页纸名词速查 + 常见疑问 + 全局总结 | 随时回查 |
+
+> **赶时间？** 只读 **01 + 02 + 03** 三篇，就能讲清楚「这是什么、怎么跑、链路长啥样」。
+
+## 三个一句话结论（先记住这三点）
+
+1. **人在环中（human-in-the-loop），不是全自动。** AI 帮你找文献、核引用、查逻辑；定题、选方法、解释数据、写「我主张……」之后那句话，永远是你。
+2. **Agent 之间不直接对话。** 它们通过读写共享文件接力，核心黑板叫 **Material Passport（材料护照）**。
+3. **每个阶段结束都有一道关。** 要么你拍板选分支（🧑 决策关），要么机器先验证、你再确认（✓ 诚信关）。没有哪一步会偷偷跳过你。
+
+---
+
+下一篇 → [01 · 项目总览](01-项目总览.md)
+
+</script>
+<script type="text/markdown" data-id="overview">
+# 01 · 项目总览
+
+> 一句话定位：**ARS（Academic Research Skills）是一套装进 Claude Code 的学术研究流水线技能套件——从「一个研究想法」到「一篇可投稿、引用可核验的论文」，全程人类把关、AI 做苦力。**
+
+## 1.1 它到底是什么（重要：先纠正一个误解）
+
+ARS **不是一个会运行的网站、后端或命令行程序**。它没有 `main()`，没有服务进程。它的本体是三类纯文本文件：
 
 ```mermaid
 flowchart LR
-    A[Markdown 目录] --> B[build_wiki.py]
-    B --> C[单文件 wiki.html]
-    C --> D[浏览器查看 / 分发]
-    style B fill:#dbeafe
-    style C fill:#dcfce7
+    subgraph ARS["ARS 项目 = 三类文本文件"]
+        SK["① 技能剧本<br/>4 个 SKILL.md<br/>（告诉 Claude 分几步做）"]
+        AG["② Agent 人设<br/>约 38 个 *.md<br/>（每个子角色的职责/规则）"]
+        SC["③ 校验脚本<br/>154 个 *.py<br/>（lint / 迁移 / 适配器 / 测试）"]
+    end
+    CC["Claude Code<br/>（主控大脑）"]
+    Out["论文 / 报告 / 评审意见<br/>+ 诚信审计 + 过程记录"]
+    SK --> CC
+    AG --> CC
+    SC -. CI 校验文档一致性 .-> SK
+    CC --> Out
+    style SK fill:#dbeafe
+    style AG fill:#dcfce7
+    style SC fill:#fef3c7
+    style CC fill:#ede9fe
 ```
 
-### 1.1 一句话
+- **技能剧本（SKILL.md）**：像「菜谱」。Claude Code 加载某个技能时，就照这份菜谱一步步执行。
+- **Agent 人设（agents/\*.md）**：像「岗位说明书」。每个子 Agent 是一段带角色设定与硬规则的 Markdown，被主控通过 **Task 工具**派发后，以独立上下文执行单一职责。
+- **校验脚本（scripts/\*.py）**：纯 Python 标准库，主要在 CI 里跑，确保文档之间不互相矛盾（比如模式数量、Schema 字段在各处保持一致）。它们**不参与论文生成**，是给维护者的护栏。
 
-> 写文档只管写 Markdown，样式与交互交给模板。
+> 换句话说：**ARS 是「提示工程 + 流程契约」的集合，不是传统代码工程。** 它的价值在于把「怎样严谨地做研究」这件事，拆成了机器可执行、人可审查的步骤。
 
----
+## 1.2 它解决什么问题
 
-## 2 元素速览
+学术写作里有大量「重复、易错、但必须做对」的苦力活：找文献、套引用格式、核对数据、查逻辑一致性、按venue 改格式。同时，纯靠 AI 全自动做研究会翻车——会编造引用、把 bug 说成发现、伪造方法学。ARS 的设计前提是：
 
-| 元素 | 支持 | 说明 |
+> **「AI 增强的人类研究者」比「纯人类」或「纯 AI」都更能避开这些失败模式。**
+
+所以它有两条主线：
+
+| 主线 | 做什么 | 谁负责 |
 |---|---|---|
-| 标题层级框体 | ✅ | H2/H3/H4… 按层级上色、点击折叠 |
-| Mermaid 图 | ✅ | 同色系主题 + 🔍 放大 |
-| 代码高亮 | ✅ | highlight.js |
-| 内部链接 | ✅ | 见 [架构示例](01-架构示例.md) |
+| **效率** | 文献检索、引用格式化、可视化、格式转换、双语摘要 | AI 做 |
+| **诚信** | 定题、选方法、解释数据、最终拍板、整数关口确认 | 人做 |
 
-```python
-# 代码块会被高亮
-def hello(name: str) -> str:
-    return f"hi, {name}"
-```
+## 1.3 三大外部动因（为什么这样设计）
 
-</script>
-<script type="text/markdown" data-id="01">
-# 架构示例
-
-演示一张稍复杂的图 + 时序图，方便检查 Mermaid 主题与放大功能。
-
-## 1 组件关系
+ARS 的关键设计几乎都能追溯到三篇论文：
 
 ```mermaid
 flowchart TB
-    subgraph Build["构建期"]
-        MD["📄 docs/*.md"] --> GEN["⚙️ build_wiki.py"]
-        TPL["🧩 template.html"] --> GEN
-    end
-    GEN --> OUT["📦 wiki.html（单文件）"]
-    OUT --> CDN["🌐 marked / mermaid / highlight.js（CDN）"]
-    style GEN fill:#dbeafe
-    style OUT fill:#dcfce7
+    P1["Lu et al. 2026 · Nature 651:914<br/>《The AI Scientist》<br/>全自动 AI 研究系统的失败模式清单"]
+    P2["Zhao et al. 2026 · arXiv 2605.07723<br/>审计 1.11 亿条引用<br/>2025 年约 146,932 条幻觉引用"]
+    P3["PaperOrchestra · Song et al. 2026 · Google<br/>多 Agent 论文流水线"]
+
+    P1 --> D1["→ 人在环中 + Stage 2.5/4.5<br/>7 模式失败清单闸门"]
+    P2 --> D2["→ L3 引用幻觉防线<br/>三层引用锚 + 三索引三角验证"]
+    P3 --> D3["→ Semantic Scholar 核验<br/>反泄漏协议 + VLM 图表核验"]
+
+    style P1 fill:#fee2e2
+    style P2 fill:#fef3c7
+    style P3 fill:#dbeafe
+    style D1 fill:#f3e8ff
+    style D2 fill:#f3e8ff
+    style D3 fill:#f3e8ff
 ```
 
-## 2 查看期时序
+- **Lu 2026** 列举了全自动 AI 研究的七种翻车方式（实现 bug 蒙混过审、幻觉引用、幻觉实验结果、走捷径、把 bug 包装成洞见、伪造方法学、过早锁死框架）。ARS 把它做成 **2.5 / 4.5 两道诚信闸门**的 7 模式阻断清单。
+- **Zhao 2026** 实测了海量幻觉引用，点名「真引用被用来支撑被引文献其实没说的论断」是未解难题。ARS 把它叫 **L3（claim faithfulness，论断忠实度）**，并加了引用锚 + 跨索引三角验证。
+- **PaperOrchestra** 启发了 v3.3 的 Semantic Scholar API 核验、反泄漏协议、VLM 图表核验、评分轨迹追踪。
+
+> 详见 [06 · 质量闸门与诚信机制](06-质量闸门与诚信机制.md)。
+
+## 1.4 四大技能：分工与协作
+
+ARS 由 4 个技能组成，可单独用，也可由编排器串成完整流水线。
+
+```mermaid
+flowchart LR
+    DR["deep-research<br/>v2.9.4 · 13 Agent · 7 模式<br/>📥 上游研究引擎"]
+    AP["academic-paper<br/>v3.2.0 · 12 Agent · 10 模式<br/>✍️ 下游写作引擎"]
+    APR["academic-paper-reviewer<br/>v1.10.0 · 7 Agent · 6 模式<br/>🔍 多视角同行评审"]
+    PIPE["academic-pipeline<br/>v3.10.0 · 编排器 · 5 Agent<br/>🎻 全流程总指挥"]
+
+    DR -->|RQ Brief + 文献 + 综述| AP
+    AP -->|完整稿件| APR
+    APR -->|修订路线图| AP
+    PIPE -. 调度 .-> DR
+    PIPE -. 调度 .-> AP
+    PIPE -. 调度 .-> APR
+
+    style DR fill:#dbeafe
+    style AP fill:#dcfce7
+    style APR fill:#fef3c7
+    style PIPE fill:#ede9fe
+```
+
+| 技能 | 角色 | 何时单独用 |
+|---|---|---|
+| `deep-research` | 把模糊问题做成有方法学、有文献、有综述的研究产物 | 「只想做研究 / 文献回顾 / 事实查核」 |
+| `academic-paper` | 把研究产物写成论文（含双语摘要、可视化、格式转换） | 「只想写 / 改一篇论文」 |
+| `academic-paper-reviewer` | 5 位评审 + 魔鬼代言人，给编辑决定 + 修订路线图 | 「只想评审一篇稿子」 |
+| `academic-pipeline` | 把上面三个串起来，管检查点、管状态、管交接 | 「想要从研究到定稿的完整流程」 |
+
+> 路由原则：只需单一功能就直接触发对应技能；要端到端才用 `academic-pipeline`。详见 [04 · 四大技能详解](04-四大技能详解.md)。
+
+## 1.5 顶层目录结构
+
+```mermaid
+graph TB
+    Root["academic-research-skills/"]
+    Root --> Skills["4 个技能目录<br/>deep-research/ academic-paper/<br/>academic-paper-reviewer/ academic-pipeline/<br/>（各含 SKILL.md + agents/ + references/ + templates/ + examples/）"]
+    Root --> Shared["shared/<br/>跨技能共享：handoff_schemas.md（13 Schema）<br/>contracts/ rubric / 协议文档"]
+    Root --> Plugin[".claude-plugin/ + commands/ + agents/ + hooks/<br/>插件打包：清单 + 13 斜杠命令 + 符号链接 Agent + Hook"]
+    Root --> Scripts["scripts/<br/>154 个 Python：lint / 迁移 / 适配器 / 测试"]
+    Root --> Docs["docs/<br/>ARCHITECTURE.md + SETUP + PERFORMANCE<br/>+ design/（45 篇设计文档）"]
+    Root --> Meta["顶层元数据<br/>README.*（4 语言）+ CHANGELOG + MODE_REGISTRY<br/>+ CONTRIBUTING + LICENSE(CC-BY-NC 4.0)"]
+
+    style Root fill:#ede9fe
+    style Skills fill:#dbeafe
+    style Shared fill:#dcfce7
+    style Plugin fill:#fef3c7
+    style Scripts fill:#fee2e2
+    style Docs fill:#e0e7ff
+```
+
+每个技能目录结构高度一致：
+
+| 子目录 | 放什么 |
+|---|---|
+| `SKILL.md` | 该技能的总剧本（触发词、Agent 阵容、编排流程、检查点） |
+| `agents/` | 该技能的子 Agent 人设（每个一份 `.md`） |
+| `references/` | 协议细则，主控按需加载（如 API 协议、反泄漏协议） |
+| `templates/` | 输出模板（报告、契约、披露声明等） |
+| `examples/` | 示例产物，给 Agent 当参照 |
+
+## 1.6 关键约定（贯穿全项目的规则）
+
+- 所有论断必须有引用。
+- 证据分级（meta 分析 > RCT > 队列 > 个案 > 专家意见）要被尊重。
+- 矛盾必须披露，并比较证据质量。
+- 所有报告都要带 AI 使用披露。
+- 默认输出语言跟随用户输入（繁中 / 简中 / 英文）。
+
+## 小结
+
+ARS = **4 个技能剧本 + 38 个 Agent 人设 + 154 个校验脚本**，由 Claude Code 主控读剧本、派 Agent、串流程，最终把研究想法变成可核验的论文。它的灵魂是「人在环中 + 多道诚信闸门」，源于三篇外部论文的教训。
+
+下一篇我们就拆解最核心也最反直觉的一点：**没有外部编排框架，这么多 Agent 到底是怎么被 Claude Code 跑起来的** → [02 · 多 Agent 执行机制 ⭐](02-多Agent执行机制.md)
+
+</script>
+<script type="text/markdown" data-id="agents">
+# 02 · 多 Agent 执行机制 ⭐
+
+> 本篇是整套 wiki 最核心的一章。它回答一个反直觉的问题：**ARS 有约 38 个 Agent，却没有任何外部编排框架（没有 LangGraph、没有 CrewAI、没有消息队列）。那这些 Agent 到底是怎么协同跑起来的？**
+>
+> 答案：**全靠 Claude Code 三种原生能力 + 文件约定 + Hook。**
+
+## 2.1 先破除一个误解：这里的「Agent」是什么
+
+在 ARS 里，一个「Agent」**不是一个进程、不是一个微服务、不是一个 API**。它就是 `agents/` 目录下的**一份 Markdown 文件**——一段带角色设定和硬规则的提示词。例如 `bibliography_agent.md` 开头长这样：
+
+```markdown
+---
+name: bibliography_agent
+description: "Systematic literature search and curation..."
+---
+# Bibliography Agent — Systematic Literature Search & Curation
+## Role Definition
+You are the Bibliography Agent. You conduct systematic, reproducible
+literature searches...
+## Phase Boundary (v3.9.2)
+You are a single-phase agent assigned to Phase 2 (Investigation)...
+You MUST NOT: WRITE files in phase{M}_*/ directories where M ≠ 2 ...
+```
+
+当主控 Claude 想让某个子 Agent 干活，它用 **Task 工具** 启动一个**新的、独立上下文**的 Claude 实例，并把这份人设当作系统提示喂进去。于是这个子实例就「变成了」Bibliography Agent，只干文献检索这一件事，干完把结果写到文件，然后消失。
+
+```mermaid
+flowchart LR
+    MD["bibliography_agent.md<br/>（一段 Markdown 人设）"]
+    Task["Task 工具<br/>启动独立子实例"]
+    Sub["子 Agent 实例<br/>（独立上下文窗口<br/>只知道自己这一步）"]
+    File["写结果到共享文件"]
+    MD -->|当系统提示喂入| Task --> Sub --> File
+    style MD fill:#dbeafe
+    style Sub fill:#dcfce7
+    style File fill:#fef3c7
+```
+
+> 关键直觉：**「派发一个 Agent」≈「开一个干净的新对话，把岗位说明书贴进去，让它只做一件事」。** 子 Agent 之间互相看不见对方的对话历史。
+
+## 2.2 三根支柱
+
+ARS 的多 Agent 协同，立在三根 Claude Code 原生支柱上：
+
+```mermaid
+flowchart TB
+    subgraph P1["支柱① 技能剧本 SKILL.md"]
+        A1["主控 Claude 加载技能后<br/>照剧本把任务拆成 Phase 0→N"]
+    end
+    subgraph P2["支柱② Task 工具派发"]
+        A2["每个 Phase 用 Task 启动子 Agent<br/>指定人设 + 输入 + 模型档位"]
+    end
+    subgraph P3["支柱③ 文件黑板"]
+        A3["Agent 不直接对话<br/>通过读写共享文件接力<br/>核心黑板 = Material Passport"]
+    end
+    P1 --> P2 --> P3
+    style P1 fill:#dbeafe
+    style P2 fill:#dcfce7
+    style P3 fill:#fef3c7
+```
+
+### 支柱① 技能剧本 = 编排逻辑写在 Markdown 里
+
+没有外部 orchestrator 类，**编排逻辑就写在 `SKILL.md` 的「Orchestration Workflow」段落里**——用文字和 ASCII 流程描述「先 research_question_agent，再 research_architect_agent，到检查点让 devils_advocate_agent 把关，用户确认后进 Phase 2……」。主控 Claude 把这段当作执行计划，逐步照做。
+
+以 `deep-research` 为例，剧本把研究拆成 6 个 Phase：
+
+```mermaid
+flowchart TB
+    P1["Phase 1 SCOPING<br/>research_question_agent → RQ Brief<br/>research_architect_agent → 方法学蓝图<br/>devils_advocate_agent ▣ 检查点1"]
+    P2["Phase 2 INVESTIGATION<br/>bibliography_agent → 标注文献<br/>source_verification_agent → 分级核验"]
+    P3["Phase 3 ANALYSIS<br/>synthesis_agent → 综述+缺口<br/>devils_advocate_agent ▣ 检查点2"]
+    P4["Phase 4 COMPOSITION<br/>report_compiler_agent → APA 草稿"]
+    P5["Phase 5 REVIEW（并行）<br/>editor_in_chief + ethics_review<br/>+ devils_advocate ▣ 检查点3"]
+    P6["Phase 6 REVISION<br/>report_compiler_agent → 终稿<br/>修订上限 2 轮"]
+    P1 -->|用户确认| P2 --> P3 --> P4 --> P5 --> P6
+    style P1 fill:#dbeafe
+    style P3 fill:#dcfce7
+    style P5 fill:#fef3c7
+    style P6 fill:#fee2e2
+```
+
+> 注意：**魔鬼代言人（Devil's Advocate）有 3 个强制检查点，Critical 级问题会阻断推进**——这就是「把关」逻辑被硬编码进剧本的样子。
+
+### 支柱② Task 工具 = 唯一的「派发」原语
+
+主控不调用任何自定义函数去「启动 worker」。它只用 Claude Code 内置的 **Task 工具**：指定要用哪个 Agent 人设、喂什么输入、用哪档模型。某些步骤可并行派发（如 Phase 5 的编辑、伦理、魔鬼代言人可同时跑）。
+
+### 支柱③ 文件黑板 = Agent 间的「信道」
+
+子 Agent 各自独立上下文、互相看不见。它们怎么接力？**通过读写共享文件**。上游 Agent 把产物写进文件，下游 Agent 读这些文件作为输入。这套共享文件里最重要的一份叫 **Material Passport（材料护照）**——一个贯穿所有阶段的元数据账本（详见 [05 · 数据模型](05-数据模型与ER图.md)）。
+
+```mermaid
+flowchart LR
+    UpAgent["上游 Agent<br/>（如 synthesis_agent）"]
+    BB[("共享文件黑板<br/>RQ Brief / 文献 / 综述<br/>Material Passport")]
+    DownAgent["下游 Agent<br/>（如 draft_writer_agent）"]
+    UpAgent -->|写产物| BB
+    BB -->|读作输入| DownAgent
+    style BB fill:#fef3c7
+    style UpAgent fill:#dbeafe
+    style DownAgent fill:#dcfce7
+```
+
+## 2.3 标准时序：一次完整派发长什么样
+
+把三根支柱串起来，一次「主控派发子 Agent」的完整时序是这样的：
 
 ```mermaid
 sequenceDiagram
     participant U as 用户
-    participant H as wiki.html
-    participant M as Mermaid
-    U->>H: 打开页面 / 点击导航
-    H->>M: 渲染 ```mermaid 代码块
-    M-->>H: 返回 SVG
-    U->>H: 点击 🔍 放大
-    H-->>U: 弹出可缩放浮层
+    participant M as 主控 Claude（读 SKILL.md）
+    participant T as Task 工具
+    participant A as 子 Agent（独立上下文）
+    participant BB as 文件黑板（Material Passport）
+    participant H as Hook（hooks.json）
+    U->>M: 一句话需求（如「研究 X」）
+    M->>M: 按剧本拆解 Phase 0→N
+    M->>T: 派发子 Agent（指定人设 / 模型 / 输入）
+    T->>H: PreToolUse 触发写域守卫
+    H-->>T: 校验通过（或拒绝越界写）
+    T->>A: 启动（预加载人设 + 上游产物路径）
+    A->>BB: 读上游产物
+    A->>BB: 写本步结果到自己 phase 目录
+    A-->>T: 完成
+    T-->>M: 汇总返回
+    M->>U: 到检查点，等用户拍板
+    Note over M,BB: Agent 间靠黑板接力，从不直接对话
+    M-->>U: 确认后进入下一 Phase / 下一轮迭代
 ```
 
-## 3 返回
+## 2.4 第四根支柱：Hook 守住边界
 
-← 回到 [示例首页](README.md)
+光靠提示词约束 Agent「别越界」还不够稳。v3.10 加了一道**确定性的程序守卫**：`hooks.json` 注册了一个 **PreToolUse Hook**，在任何 `Write/Edit/MultiEdit/Bash` 真正执行前，先跑 `ars_write_scope_guard.py`。
+
+它做两件事，专门对付 #133「阶段膨胀」问题（单阶段 Agent 偷偷写下游阶段的产物）：
+
+```mermaid
+flowchart TB
+    Call["子 Agent 想写文件 / 跑 Bash"]
+    Hook{{"PreToolUse Hook<br/>ars_write_scope_guard.py"}}
+    Q1{"是 23 个单阶段<br/>Bucket A Agent 之一？"}
+    Q2{"写的路径在<br/>自己 phase 目录内？"}
+    Allow["✅ 放行"]
+    Deny["⛔ 拒绝<br/>（越界写 / 任何 Bash）"]
+
+    Call --> Hook --> Q1
+    Q1 -->|否，是多阶段/主控| Allow
+    Q1 -->|是| Q2
+    Q2 -->|是| Allow
+    Q2 -->|否| Deny
+    Q1 -. 单阶段 Agent 的<br/>所有 Bash 一律拒 .-> Deny
+
+    style Hook fill:#fef3c7
+    style Allow fill:#dcfce7
+    style Deny fill:#fee2e2
+```
+
+- **写域围栏**：23 个单阶段 Agent（Bucket A）只能写自己 phase 目录（如 Phase 2 的 Agent 只能写 `phase2_*/`），越界写被拒——绝不能膨胀去写 Phase 3 综述、Phase 4 草稿。
+- **禁 Bash**：这 23 个 Agent 的所有 Bash 调用一律拒绝。理由很实在——「一条 Bash 命令到底会不会写文件」无法从命令串可靠判断，所以唯一零漏判的策略就是全拒；它们改用 Grep/Glob 搜索、用结构化编辑工具写。
+- **保护执行面**：`hooks.json`、Hook 脚本本身、Agent 定义、`.claude/CLAUDE.md` 等被无条件保护，防止 Agent 篡改约束自己的规则。
+
+> 这道 Hook 由 Claude Code 在工具调用前自动执行——**不是 Claude 自觉遵守，而是宿主强制拦截**，所以可靠。
+
+## 2.5 模型分层：重活用强模型，轻活用快模型
+
+Agent 人设里可带 `model:` 字段，斜杠命令的 frontmatter 也钉了模型档位。原则是**按任务难度分配算力**：
+
+| 档位 | 用在哪 | 例子 |
+|---|---|---|
+| `opus`（最强） | 全流程编排、修订辅导等高认知负载 | `/ars-full`、`/ars-revision-coach` |
+| `sonnet`（均衡） | 其余 8 个单一模式 | `/ars-plan`、`/ars-lit-review`、`/ars-reviewer` |
+| `inherit` | 插件侧 Agent 继承当前会话模型 | 让 Opus 会话保持 Opus Agent |
+| ~~haiku~~ | **不用**——质量优先 | — |
+
+插件侧 3 个 Agent 用 `model: inherit`，配合用户的 PreToolUse `warn-agent-no-model.sh` 钩子在派发时拦截 Haiku。
+
+## 2.6 两种调用模式
+
+```mermaid
+flowchart TB
+    subgraph A["模式 A · 编排器驱动（默认）"]
+        OA["pipeline_orchestrator_agent<br/>一口气端到端跑完 6+ 阶段<br/>用 Material Passport 追状态"]
+    end
+    subgraph B["模式 B · 逐阶段（跨会话续跑）"]
+        OB["用户每会话只调一个 Phase 的 Agent<br/>靠 ARS_PASSPORT_RESET=1<br/>+ resume_from_passport=hash 续跑"]
+    end
+    style A fill:#dbeafe
+    style B fill:#dcfce7
+```
+
+- **模式 A**：`pipeline_orchestrator_agent` 当总指挥，全程跑完，适合一次性产出。
+- **模式 B**：长项目可拆开，每个会话只推进一个阶段，靠 Material Passport 账本在新会话里「断点续跑」——无需重放之前的对话。进入模式 B 需要明确信号（`/ars-<mode>` 斜杠命令或 `[direct-mode]` 前缀）；含糊的跨阶段输入会默认走澄清。
+
+## 小结
+
+ARS 的多 Agent 没有魔法框架，它把编排彻底「文件化、原生化」：
+
+1. **编排逻辑 = SKILL.md 里的文字剧本**，主控照着逐步执行。
+2. **派发 = Task 工具**，每个子 Agent 是独立上下文、单一职责的临时实例。
+3. **协同 = 文件黑板（Material Passport）**，Agent 间从不直接对话。
+4. **边界 = PreToolUse Hook**，宿主在工具执行前强制拦截越界写与 Bash。
+5. **算力 = 模型分层**，重活 Opus、均衡活 Sonnet、不用 Haiku。
+
+理解了这五点，你就理解了 ARS 的「运行时」。下一篇看这套机制如何串成一条从想法到定稿的完整链路 → [03 · 端到端链路](03-端到端链路.md)
+
+</script>
+<script type="text/markdown" data-id="pipeline">
+# 03 · 端到端链路（10 阶段）
+
+> 本篇讲「主流程」：当你用 `academic-pipeline` 编排器跑完整流程时，从一句话需求到定稿，会经过哪 10 个阶段、每步产出什么、在哪里停下来等你拍板。
+>
+> 权威来源：`docs/ARCHITECTURE.md`、`academic-pipeline/SKILL.md`、`pipeline_state_machine.md`。
+
+## 3.1 总流程图（一图看懂全局）
+
+```mermaid
+flowchart TD
+    Start([用户输入])
+    S1["1. 研究 RESEARCH<br/>deep-research"]
+    S2["2. 写作 WRITE<br/>academic-paper"]
+    G25{{"2.5 诚信闸门<br/>7 模式失败清单<br/>机器验证 + 用户确认"}}
+    S3["3. 评审 REVIEW<br/>academic-paper-reviewer"]
+    D3{编辑决定}
+    RC["3→4 修订辅导<br/>最多 8 轮 Socratic"]
+    S4["4. 修订 REVISE<br/>academic-paper"]
+    S3p["3'. 复审 RE-REVIEW"]
+    D3p{复审决定}
+    RS["3'→4' 残留辅导<br/>最多 5 轮"]
+    S4p["4'. 再修订<br/>内容冻结"]
+    G45{{"4.5 终审诚信闸门<br/>Mode 2 深查 · 零容忍"}}
+    S5["5. 定稿 FINALIZE<br/>选格式 + AI 披露"]
+    S6["6. 过程总结<br/>+ AI 自省报告"]
+    End([完成])
+
+    Start --> S1 --> S2 --> G25
+    G25 -->|PASS| S3
+    G25 -->|FAIL，最多 3 轮重试| S2
+    S3 --> D3
+    D3 -->|Accept| G45
+    D3 -->|Minor / Major| RC --> S4
+    D3 -->|Reject| End
+    S4 --> S3p --> D3p
+    D3p -->|Accept / Minor| G45
+    D3p -->|Major| RS --> S4p
+    S4p --> G45
+    G45 -->|PASS| S5
+    G45 -->|FAIL| S4p
+    S5 --> S6 --> End
+
+    classDef human fill:#fee2e2,stroke:#cf1322,stroke-width:2px
+    classDef gate fill:#fef3c7,stroke:#d48806,stroke-width:2px
+    classDef coach fill:#ecfccb,stroke:#7cb305
+    classDef decision fill:#f3e8ff,stroke:#9254de
+    class S1,S2,S3,S4,S3p,S4p,S5,S6 human
+    class G25,G45 gate
+    class RC,RS coach
+    class D3,D3p decision
+```
+
+## 3.2 两类检查点：你要么选分支，要么确认报告
+
+整条链路每个阶段结束都会停下来等你，但「停下来」分两种：
+
+```mermaid
+flowchart LR
+    subgraph H["🧑 决策关（10 个）"]
+        H1["你主动选分支 / 拍板<br/>例：选 Accept/Minor/Major/Reject<br/>例：批准大纲、选输出格式"]
+    end
+    subgraph V["✓ 诚信关（2 个：2.5 / 4.5）"]
+        V1["机器先跑 7 模式验证<br/>你再确认这份诚信报告<br/>（确认报告，不是选分支）"]
+    end
+    style H fill:#fee2e2
+    style V fill:#fef3c7
+```
+
+| 类别 | 数量 | 你在做什么 | 例子 |
+|---|---|---|---|
+| 🧑 **决策关** | 10 | 选一个分支 / 接受一个实质决定 | 批准 RQ、批准大纲、读编辑决定、选格式、确认语言 |
+| ✓ **诚信关** | 2 | 机器先验证，你确认报告 PASS/FAIL | Stage 2.5、Stage 4.5 |
+
+> **没有哪一步会偷偷跳过你。** 即使是「确认报告」型的诚信关，也是机器先验证、你再确认，绝不自动放行。
+
+## 3.3 逐阶段拆解
+
+下表是完整 10 阶段。`data_access_level`（数据访问级别）一列很关键——它标记每个阶段能看到多「原始」的数据（见 §3.4）。
+
+| 阶段 | 技能 | 数据级别 | 产出 | 关口 |
+|---|---|---|---|---|
+| **1 研究** | deep-research | RAW | RQ Brief、方法学蓝图、标注文献（S2 核验）、综述、INSIGHT 集 | 🧑 确认 RQ + 方法学 |
+| **2 写作** | academic-paper | REDACTED | 论文配置记录、大纲、论证图、草稿、双语摘要、图表、引用清单 | 🧑 批准大纲后才动笔 |
+| **2.5 诚信** | academic-pipeline | VERIFIED_ONLY | Material Passport（Schema 9）、论断核验报告（抽样 30%，≥10 条）、数据溯源审计 | ✓ 7 模式清单 + 用户确认；FAIL→修，最多 3 轮 |
+| **3 评审** | academic-paper-reviewer | VERIFIED_ONLY | 5 份评审报告（EIC + 3 评审 + 魔鬼代言人）+ 编辑决定 + 修订路线图 | 🧑 读编辑决定；Sprint Contract 两阶段评审 |
+| **3→4 辅导** | reviewer（EIC） | VERIFIED_ONLY | 修订策略对话（不落盘，喂给 Stage 4） | 🧑 最多 8 轮；可说「直接帮我改」跳过 |
+| **4 修订** | academic-paper | REDACTED | 逐点回复、修订稿、Delta 报告 | 🧑 确认改动；评分轨迹追踪，回退即标记 |
+| **3' 复审** | reviewer（re-review） | VERIFIED_ONLY | 复审清单 + 残留问题 + 新决定 + R&R 溯源矩阵（Schema 11） | 🧑 读复审决定；硬上限：再修订仅 1 轮 |
+| **3'→4' 辅导** | reviewer（EIC） | VERIFIED_ONLY | 残留问题权衡对话 | 🧑 最多 5 轮；可跳过 |
+| **4' 再修订** | academic-paper | REDACTED | 最终修订稿（终点，进 4.5） | 🧑 确认内容冻结；不再有评审回环 |
+| **4.5 终审诚信** | academic-pipeline | VERIFIED_ONLY | 更新版 Material Passport（VERIFIED）、论断核验报告（终检 100%） | ✓ 7 模式深查，**零容忍、不可跳**；任何 2.5 标记的疑点必须 CLEAR 或被用户 Override |
+| **5 定稿** | academic-paper | VERIFIED_ONLY | 可发布 MD / DOCX / LaTeX / PDF + venue 专属 AI 披露 | 🧑 选格式；披露须匹配 venue |
+| **6 过程总结** | academic-pipeline | VERIFIED_ONLY | 论文创作过程记录、AI 自省报告、评分轨迹图、协作深度章节 | 🧑 确认语言；评估协作质量 |
+
+> 还有一个**可选**的 v3.8 阶段：`4→5 CLAIM-AUDIT`（`ARS_CLAIM_AUDIT=1` 开启），逐条引用对照原文核查论断是否被真正支撑，默认关闭。详见 [06 · 质量闸门](06-质量闸门与诚信机制.md)。
+
+## 3.4 数据访问级别：越往后越「净」
+
+ARS 用 `data_access_level` 标记每个技能能接触多原始的数据。这是一种**声明式契约**（不是运行时强制的权限系统），但它约束了数据流的形状，让诚信闸门有意义。
+
+```mermaid
+flowchart LR
+    User["用户输入<br/>网页 / PDF / 查询"]
+    Raw["deep-research<br/>raw（可能含对抗性原始数据）"]
+    Red["academic-paper<br/>redacted（净化材料，不再吃新原始数据）"]
+    Ver["reviewer + pipeline<br/>verified_only（只在诚信闸门后运行）"]
+
+    User --> Raw
+    Raw -->|source_verification 提级| Red
+    Red -->|Gate 2.5 七模式| Ver
+
+    style Raw fill:#fee2e2
+    style Red fill:#fef3c7
+    style Ver fill:#dcfce7
+```
+
+- `raw`：吃第一层数据（任意、可能对抗性）。
+- `redacted`：只在净化材料上工作，不引入新原始数据。
+- `verified_only`：只在上游诚信闸门通过后运行。
+- **关键护栏**：评分细则（rubric）/ 标准答案（gold label）不得出现在「生成候选答案」的 Agent 上下文里——校准用的 gold set 由人类研究者在运行时提供，不打包进仓库。
+
+## 3.5 迭代回环与硬上限
+
+修订不是无限循环。链路里有明确的「闸门」防止打转：
+
+```mermaid
+stateDiagram-v2
+    [*] --> 初评: Stage 3
+    初评 --> 修订: Minor/Major
+    初评 --> 定稿: Accept
+    初评 --> [*]: Reject
+    修订 --> 复审: Stage 4 → 3'
+    复审 --> 定稿: Accept/Minor
+    复审 --> 再修订: Major（仅 1 次）
+    再修订 --> 终审: Stage 4' → 4.5
+    定稿 --> 终审: Stage 4.5
+    终审 --> 发布: PASS
+    终审 --> 再修订: FAIL
+    发布 --> [*]
+```
+
+| 上限 | 值 |
+|---|---|
+| 修订辅导（3→4） | 最多 8 轮 Socratic 对话 |
+| 残留辅导（3'→4'） | 最多 5 轮 |
+| 修订回环总数（Stage 4 + 4'） | **最多 2 轮**（再修订 3' 之后只允许 1 次） |
+| 2.5 诚信修复 | 最多 3 轮 |
+| deep-research 内部修订 | 最多 2 轮，剩余问题转「已知局限」 |
+
+## 3.6 观察者：全程旁观但从不阻断
+
+v3.5 起，`collaboration_depth_agent`（协作深度观察者）在每个 FULL/SLIM 检查点 + 流程结束时旁观，对「人机协作模式」打分（4 维度）。它**永远只给建议、从不阻断**。注意：**两道 MANDATORY 诚信闸门（2.5 / 4.5）明确不调用观察者**，以免稀释合规检查。
+
+## 小结
+
+完整链路 = **研究 → 写作 →〔2.5 诚信关〕→ 评审 →（辅导）→ 修订 → 复审 →（辅导）→ 再修订 →〔4.5 诚信关〕→ 定稿 → 过程总结**。两类检查点（🧑 决策 / ✓ 诚信）保证人始终在环中；硬上限防止无限打转；数据级别 raw→redacted→verified_only 让诚信闸门有意义。
+
+下一篇逐个拆开这条链路上的 4 个技能 → [04 · 四大技能详解](04-四大技能详解.md)
+
+</script>
+<script type="text/markdown" data-id="skills">
+# 04 · 四大技能详解
+
+> 本篇逐个拆开 4 个技能：它是干什么的、有哪些 Agent、支持哪些模式、吃什么吐什么。每个技能都遵循同一套目录结构（`SKILL.md` + `agents/` + `references/` + `templates/` + `examples/`）。
+>
+> 全套共 **25 个模式**（权威清单见 `MODE_REGISTRY.md`），约 38 个 Agent。
+
+## 4.1 deep-research — 上游研究引擎
+
+**定位**：把一个模糊的研究想法，做成「有方法学、有文献、有综述」的研究产物。`data_access_level: raw`，吃第一层原始数据。
+
+**Agent 阵容（13 核心 + 1 个 v3.9.4 时间线 sibling）**：
+
+```mermaid
+flowchart TB
+    subgraph P1["Phase 1 立题"]
+        RQ["research_question_agent<br/>FINER 评分 + 子问题"]
+        RA["research_architect_agent<br/>方法学蓝图"]
+    end
+    subgraph P2["Phase 2 调查"]
+        BIB["bibliography_agent<br/>系统检索 + 标注文献<br/>📚 可读 literature_corpus"]
+        SV["source_verification_agent<br/>证据分级 + 掠夺性期刊筛查"]
+        TL["timeline_extraction_agent<br/>v3.9.4 时间线抽取"]
+    end
+    subgraph P3["Phase 3 分析"]
+        SYN["synthesis_agent<br/>主题综述 + 缺口分析"]
+        MA["meta_analysis_agent<br/>后设分析（可选）"]
+        ROB["risk_of_bias_agent<br/>偏倚风险评估"]
+    end
+    subgraph P5["Phase 4-6 成文 + 评审"]
+        RC["report_compiler_agent<br/>APA 7.0 全文"]
+        EIC["editor_in_chief_agent<br/>编辑裁决"]
+        ETH["ethics_review_agent<br/>伦理清查"]
+    end
+    DA["devils_advocate_agent<br/>3 个强制检查点 ▣"]
+    SOC["socratic_mentor_agent<br/>Socratic 引导（含阅读探针）"]
+    MON["monitoring_agent<br/>流程后文献监控"]
+
+    P1 --> P2 --> P3 --> P5
+    DA -. 把关 .-> P1
+    DA -. 把关 .-> P3
+    DA -. 把关 .-> P5
+
+    style P1 fill:#dbeafe
+    style P2 fill:#dcfce7
+    style P3 fill:#fef3c7
+    style P5 fill:#fee2e2
+    style DA fill:#f3e8ff
+```
+
+**7 个模式**：
+
+| 模式 | 谱系 | 产出 | 触发 |
+|---|---|---|---|
+| `full` | 均衡 | APA 7.0 报告，3000-8000 字 | 「研究 X」「深度研究」 |
+| `quick` | 保真 | 研究简报，500-1500 字 | 「快速简报」 |
+| `review` | 均衡 | 对给定文本的评审报告 | 「评审这篇」 |
+| `lit-review` | 保真 | 标注文献 + 综述 | 「文献回顾」 |
+| `fact-check` | 保真 | 逐条论断核验报告 | 「事实查核」 |
+| `socratic` | 原创 | 研究计划摘要 + INSIGHT 集 | 「引导我的研究」「我不确定研究什么」 |
+| `systematic-review` | 保真 | PRISMA 2020 报告，5000-15000 字 | 「系统性回顾」「PRISMA」 |
+
+> **6 阶段编排流**（SCOPING → INVESTIGATION → ANALYSIS → COMPOSITION → REVIEW → REVISION）的细节见 [02 · 多 Agent 执行机制](02-多Agent执行机制.md) §2.2。
+
+## 4.2 academic-paper — 下游写作引擎
+
+**定位**：把研究产物写成论文，含双语摘要、可视化、引用核验、格式转换。`data_access_level: redacted`，只在净化材料上工作。
+
+**Agent 阵容（12）**：
+
+```mermaid
+flowchart LR
+    INT["intake_agent<br/>意图 + 配置 + 风格画像"]
+    LS["literature_strategist_agent<br/>📚 文献策略（可读 corpus）"]
+    SA["structure_architect_agent<br/>结构 / 大纲"]
+    AB["argument_builder_agent<br/>论证图"]
+    DW["draft_writer_agent<br/>草稿（反泄漏）"]
+    VIZ["visualization_agent<br/>图表 + VLM 核验"]
+    CC["citation_compliance_agent<br/>引用核验"]
+    ABS["abstract_bilingual_agent<br/>双语摘要"]
+    PR["peer_reviewer_agent<br/>内部预评审"]
+    RVC["revision_coach_agent<br/>修订辅导（Socratic）"]
+    FMT["formatter_agent<br/>格式转换 + 终端硬闸门"]
+    SOC["socratic_mentor_agent<br/>plan 模式引导"]
+
+    INT --> LS --> SA --> AB --> DW
+    DW --> VIZ
+    DW --> CC --> ABS
+    DW --> PR --> RVC
+    ABS --> FMT
+    SOC -. plan 模式 .-> INT
+
+    style INT fill:#dbeafe
+    style DW fill:#dcfce7
+    style FMT fill:#fee2e2
+    style SOC fill:#f3e8ff
+```
+
+**10 个模式**（最多的技能）：`full`、`plan`（Socratic 章节规划）、`outline-only`、`revision`、`revision-coach`、`abstract-only`、`lit-review`、`format-convert`、`citation-check`、`disclosure`（venue 专属 AI 披露）。
+
+**几个招牌能力**：
+
+- **风格校准（Style Calibration）**：从你过往作品学你的写作声音，让草稿像你写的。
+- **写作质量检查（Writing Quality Check）**：抓「机器味」的句式。
+- **反泄漏协议（Anti-Leakage）**：草稿里凡是 session 材料里没有的填充，打 `[MATERIAL GAP]` 标记。
+- **VLM 图表核验**：渲染出的图过 10 点 APA 7.0 清单，最多 2 轮精修。
+- **终端硬闸门**：`formatter_agent` 在定稿前对未解决的 HIGH-WARN 引用问题**拒绝出稿**。
+
+## 4.3 academic-paper-reviewer — 多视角同行评审
+
+**定位**：模拟一个评审委员会，给出编辑决定 + 修订路线图。**只读**，不改稿、不加新论断。`data_access_level: verified_only`。
+
+**Agent 阵容（7）**：
+
+```mermaid
+flowchart TB
+    FA["field_analyst_agent<br/>自动识别领域<br/>配置 3 个领域自适应评审"]
+    EIC["eic_agent<br/>总编辑 · 最终裁决<br/>+ Socratic 辅导子阶段"]
+    R1["methodology_reviewer_agent<br/>R1 方法学"]
+    R2["domain_reviewer_agent<br/>R2 领域"]
+    R3["perspective_reviewer_agent<br/>R3 跨学科视角"]
+    DA["devils_advocate_reviewer_agent<br/>魔鬼代言人 · 让步阈值 ≥4/5"]
+    SYN["editorial_synthesizer_agent<br/>🔒 三步机械协议 + 禁操作清单"]
+
+    FA --> R1 & R2 & R3
+    R1 & R2 & R3 & DA & EIC --> SYN
+    SYN --> Out["编辑决定<br/>Accept/Minor/Major/Reject<br/>+ 修订路线图"]
+
+    style FA fill:#dbeafe
+    style EIC fill:#fef3c7
+    style DA fill:#fee2e2
+    style SYN fill:#dcfce7
+    style Out fill:#f3e8ff
+```
+
+**6 个模式**：`full`（5 评审报告 + 决定 + 路线图）、`re-review`（复审验证）、`quick`、`methodology-focus`、`guided`（Socratic 逐条对话）、`calibration`（测自己的 FNR/FPR/AUC）。
+
+**招牌机制**：
+
+- **Sprint Contract 硬闸门（v3.6.2）**：每位评审先在「看不到论文」的 Phase 1 提交评分计划（契约），再在 Phase 2 看论文打分——防止「看了论文再编评分标准」。
+- **让步阈值协议（反谄媚）**：魔鬼代言人的反驳被打 1-5 分，低于 4 分不让步。
+- **攻击强度保持**：修订过程中不稀释原本的尖锐质疑。
+- **R&R 溯源矩阵（Schema 11）**：复审时逐条核对「作者声称改了 vs 实际改了」。
+
+## 4.4 academic-pipeline — 全流程总指挥
+
+**定位**：把上面三个技能串成 10 阶段流水线，管检查点、管状态、管交接。`data_access_level: verified_only`。
+
+**Agent 阵容（5）**：
+
+```mermaid
+flowchart TB
+    ORCH["pipeline_orchestrator_agent<br/>总指挥：检测 / 推荐 / 派发 / 转场 / 追踪<br/>不做实质工作"]
+    STATE["state_tracker_agent<br/>状态追踪 + Material Passport 维护"]
+    INTEG["integrity_verification_agent<br/>2.5/4.5 诚信闸门 · 7 模式清单"]
+    CLAIM["claim_ref_alignment_audit_agent<br/>v3.8 L3 论断-引用对齐审计（可选）"]
+    OBS["collaboration_depth_agent<br/>协作深度观察者 · 仅建议从不阻断"]
+
+    ORCH --> STATE
+    ORCH --> INTEG
+    ORCH --> CLAIM
+    ORCH -. FULL/SLIM 检查点 .-> OBS
+
+    style ORCH fill:#ede9fe
+    style INTEG fill:#fee2e2
+    style CLAIM fill:#fef3c7
+    style OBS fill:#dcfce7
+```
+
+**编排器的纪律**：`pipeline_orchestrator_agent` **不写论文、不做研究、不评审、不核引用**——它只负责检测意图、推荐、派发、转场、追踪、检查点管理。实质工作全部委托给三个子技能。
+
+**模式**：1 个编排器（无独立命名模式）+ `resume_from_passport=<hash>`（从 Material Passport 重置边界续跑）。两个可选增强：`ARS_CLAIM_AUDIT=1`（L3 审计）、v3.9.4 时间线核验层。
+
+## 4.5 四技能能力对照
+
+| 维度 | deep-research | academic-paper | academic-paper-reviewer | academic-pipeline |
+|---|---|---|---|---|
+| 版本 | v2.9.4 | v3.2.0 | v1.10.0 | v3.10.0 |
+| Agent 数 | 13(+1) | 12 | 7 | 5 |
+| 模式数 | 7 | 10 | 6 | 1(+续跑) |
+| 数据级别 | raw | redacted | verified_only | verified_only |
+| 角色 | 研究引擎 | 写作引擎 | 评审委员会 | 总指挥 |
+| 能否单独用 | ✅ | ✅ | ✅ | ✅（串全流程） |
+
+## 小结
+
+4 个技能各司其职，又能由编排器串成完整流水线。deep-research 产出研究材料，academic-paper 写成论文，academic-paper-reviewer 多视角评审，academic-pipeline 当总指挥并守两道诚信闸门。它们之间靠共享文件交接——下一篇看这套数据契约长什么样 → [05 · 数据模型与 E-R 图](05-数据模型与ER图.md)
+
+</script>
+<script type="text/markdown" data-id="data">
+# 05 · 数据模型与 E-R 图
+
+> 上一篇说「Agent 之间靠共享文件接力」。本篇就讲这些共享文件的**数据契约**：13 个交接 Schema，以及把它们串起来的中枢——**Material Passport（材料护照）**。
+>
+> 权威来源：`shared/handoff_schemas.md`（Schema 1-13）、`shared/contracts/passport/*.schema.json`。
+
+## 5.1 核心直觉：Material Passport 是「随产物同行的身份证」
+
+每当一个产物（研究简报、草稿、评审报告……）从一个阶段流到下一个阶段，都有一份 **Material Passport** 贴在它身上，记录「我从哪个技能、哪个模式、什么时候产出，验证状态如何，依赖哪些上游产物」。它是整条流水线的**溯源 + 验证账本**，也是跨会话续跑的依据。
+
+```mermaid
+flowchart LR
+    A1["研究产物<br/>+ 护照 v1"]
+    A2["论文草稿<br/>+ 护照 v2"]
+    A3["评审 + 修订稿<br/>+ 护照 v3"]
+    A4["终稿<br/>+ 护照 VERIFIED"]
+    A1 -->|交接| A2 -->|交接| A3 -->|交接| A4
+    Note["护照随产物同行<br/>记录溯源 / 验证状态 / 上游依赖"]
+    Note -.-> A1
+    Note -.-> A4
+    style A1 fill:#dbeafe
+    style A2 fill:#dcfce7
+    style A3 fill:#fef3c7
+    style A4 fill:#bbf7d0
+    style Note fill:#f3e8ff
+```
+
+## 5.2 E-R 图：护照 + 13 个交接契约
+
+下图是数据模型全貌。**Material Passport 是中枢**，它「伴随」各阶段产物（Schema 1-8/10），并「内嵌」几个追加式账本（literature_corpus、reset_boundary、compliance_history）。
+
+```mermaid
+erDiagram
+    MATERIAL_PASSPORT ||--o{ RQ_BRIEF : accompanies
+    MATERIAL_PASSPORT ||--o{ BIBLIOGRAPHY : accompanies
+    MATERIAL_PASSPORT ||--o{ SYNTHESIS_REPORT : accompanies
+    MATERIAL_PASSPORT ||--o{ PAPER_DRAFT : accompanies
+    MATERIAL_PASSPORT ||--o{ INTEGRITY_REPORT : accompanies
+    MATERIAL_PASSPORT ||--o{ REVIEW_REPORT : accompanies
+    MATERIAL_PASSPORT ||--o{ REVISION_ROADMAP : accompanies
+    MATERIAL_PASSPORT ||--o{ RESPONSE_TO_REVIEWERS : accompanies
+    MATERIAL_PASSPORT ||--o{ STYLE_PROFILE : accompanies
+    MATERIAL_PASSPORT ||--o{ LITERATURE_CORPUS_ENTRY : embeds
+    MATERIAL_PASSPORT ||--o{ RESET_BOUNDARY_ENTRY : embeds
+    MATERIAL_PASSPORT ||--o{ COMPLIANCE_REPORT : embeds
+
+    RQ_BRIEF ||--|| BIBLIOGRAPHY : feeds
+    BIBLIOGRAPHY ||--|| SYNTHESIS_REPORT : feeds
+    SYNTHESIS_REPORT ||--|| PAPER_DRAFT : feeds
+    PAPER_DRAFT ||--|| INTEGRITY_REPORT : verified_by
+    PAPER_DRAFT ||--o{ REVIEW_REPORT : reviewed_by
+    REVIEW_REPORT ||--|| REVISION_ROADMAP : produces
+    REVISION_ROADMAP ||--|| RESPONSE_TO_REVIEWERS : answered_by
+    REVIEW_REPORT ||--o{ SPRINT_CONTRACT : committed_via
+    RESPONSE_TO_REVIEWERS ||--o{ RR_TRACEABILITY_MATRIX : tracked_by
+
+    MATERIAL_PASSPORT {
+        string origin_skill
+        string origin_mode
+        string origin_date
+        enum verification_status
+        string version_label
+        string content_hash
+        object repro_lock
+    }
+    RQ_BRIEF {
+        string research_question
+        list sub_questions
+        object finer_scoring
+    }
+    BIBLIOGRAPHY {
+        list sources
+        object search_strategy
+    }
+    PAPER_DRAFT {
+        list sections
+        list references
+        list authors
+    }
+    LITERATURE_CORPUS_ENTRY {
+        list authors
+        int year
+        string title
+        string source_pointer
+    }
+    REVIEW_REPORT {
+        string reviewer_role
+        list weaknesses
+        enum decision
+    }
+```
+
+> 读图要点：
+> - **实线菱形（||--o{）**：一份护照可伴随多份产物。
+> - **feeds 链**：RQ Brief → Bibliography → Synthesis → Paper Draft，正是研究到写作的主数据流。
+> - **embeds**：literature_corpus / reset_boundary / compliance_history 是护照内部的追加式账本，不是独立文件。
+
+## 5.3 13 个交接 Schema 速查
+
+`shared/handoff_schemas.md` 定义了跨技能的数据契约。每个 Schema 标注了「谁产出 → 谁消费」。
+
+| # | Schema | 生产者 → 消费者 | 作用 |
+|---|---|---|---|
+| 1 | RQ Brief | deep-research → academic-paper | 研究问题 + FINER 评分 + 子问题 |
+| 2 | Bibliography | deep-research → academic-paper | 标注文献 + 检索策略 |
+| 3 | Synthesis Report | deep-research → academic-paper | 主题综述 + 缺口 + 辩论 |
+| 4 | Paper Draft | academic-paper → 诚信/评审 | 分节正文 + 引用 + 作者 |
+| 5 | Integrity Report | integrity_agent → pipeline | 7 模式诚信结果 + 评分轨迹 |
+| 6 | Review Report | reviewer → pipeline | 每位评审的弱点 + 决定 |
+| 7 | Revision Roadmap | reviewer → academic-paper | 修订路线图条目 |
+| 8 | Response to Reviewers | academic-paper → reviewer | 逐点回复 |
+| 9 | **Material Passport** | 跨阶段 | **中枢：溯源 + 验证元数据** |
+| 10 | Style Profile | intake → draft_writer | 用户写作声音画像 |
+| 11 | R&R Traceability Matrix | revision → re-review | 「声称改了 vs 实际改了」+ 承诺账本 |
+| 12 | Compliance Report | compliance_agent | PRISMA-trAIce + RAISE 合规审计 |
+| 13 | Sprint Contract | reviewer | 看不到论文时先提交的评分契约 |
+
+## 5.4 文献语料输入口：literature_corpus[]（可选）
+
+Material Passport 有一个**可选输入口** `literature_corpus[]`，让用户把自己整理的文献（Zotero / Obsidian / PDF 文件夹）喂进流程。它分**生产者**（会话外，适配器）和**消费者**（运行时，Phase 1 文献 Agent）两侧。
+
+```mermaid
+flowchart LR
+    subgraph Producer["生产者（会话外 · 用户侧）"]
+        Src["用户语料<br/>Zotero / Obsidian / PDF 文件夹"]
+        Adp["适配器（参考实现）<br/>folder_scan.py / zotero.py / obsidian.py"]
+        Src --> Adp
+    end
+    PP[("Material Passport<br/>literature_corpus[]<br/>+ rejection_log.yaml")]
+    Adp --> PP
+    subgraph Consumer["消费者（Phase 1 运行时）"]
+        BA["deep-research<br/>bibliography_agent"]
+        LS["academic-paper<br/>literature_strategist_agent"]
+    end
+    PP -->|基于存在性自动启用| BA
+    PP -->|基于存在性自动启用| LS
+    BA --> R1["检索策略报告<br/>+ PRE-SCREENED 块<br/>final = 语料 ∪ 外部"]
+    LS --> R2["文献检索报告<br/>+ PRE-SCREENED 块"]
+
+    style PP fill:#dbeafe
+    style Adp fill:#fef3c7
+    style BA fill:#dcfce7
+    style LS fill:#dcfce7
+```
+
+**四条铁律**（每个消费者都遵守）：
+
+| # | 铁律 | 含义 |
+|---|---|---|
+| 1 | 同一标准 | 语料条目和外部检索结果用同一套纳入/排除标准 |
+| 2 | 不静默跳过 | 任何被跳过的语料条目都要在 PRE-SCREENED 块记录原因 |
+| 3 | 不改语料 | 消费者只读，绝不修改 / 回填 / 派生 `literature_corpus[]` |
+| 4 | 解析失败优雅降级 | 解析不了就打 `[CORPUS PARSE FAILURE]`，退回纯外部检索流 |
+
+> 这是「存在即启用」：护照带了非空且能解析的 `literature_corpus[]` 就自动接入，否则按原来的纯外部检索流跑——**对现有用户零改动**。
+
+## 5.5 护照里的追加式账本
+
+护照内部有几个「只追加、不删改」的账本，支撑高级能力：
+
+| 账本字段 | 加入版本 | 作用 |
+|---|---|---|
+| `reset_boundary[]` | v3.6.3 | 跨会话续跑的重置边界（`boundary` / `resume` 两种条目，SHA-256 哈希） |
+| `compliance_history[]` | v3.4.0 | PRISMA-trAIce + RAISE 合规审计轨迹（Schema 12） |
+| `literature_corpus[]` | v3.6.4 | 用户文献语料输入口 |
+| `audit_artifact[]` | v3.6.7 | 跨模型审计运行记录 |
+| `repro_lock` | v3.3.5 | 可复现性锁文件（或显式 `null` = 诚实地选择不锁） |
+
+## 小结
+
+ARS 的数据模型以 **Material Passport（Schema 9）为中枢**：它随每个产物同行，记录溯源与验证状态，内嵌多个追加式账本。13 个交接 Schema 定义了技能之间「谁产出、谁消费」的契约，串起 RQ Brief → Bibliography → Synthesis → Draft → Review → Revision 的主数据流。可选的 `literature_corpus[]` 让用户把自己的文献喂进来。
+
+这套数据契约也是诚信机制的载体——下一篇看那些质量闸门怎么用它把关 → [06 · 质量闸门与诚信机制](06-质量闸门与诚信机制.md)
+
+</script>
+<script type="text/markdown" data-id="gates">
+# 06 · 质量闸门与诚信机制
+
+> ARS 的灵魂不是「写得快」，而是「写得可信」。本篇集中讲它的诚信防线：**7 模式失败清单、反谄媚、反泄漏、L3 引用幻觉检测、三索引三角验证、协作深度观察者**。
+>
+> 这些机制几乎都能追溯到 [01 · 项目总览](01-项目总览.md) §1.3 的三篇外部论文。
+
+## 6.1 两道诚信闸门：2.5 与 4.5
+
+整条链路里有两道**机器先验证、用户再确认**的诚信关，用同一份 7 模式清单，但严格度不同。
+
+```mermaid
+flowchart TB
+    G25{{"Stage 2.5 诚信闸门<br/>初评前 · 抽样 30%（≥10 条）"}}
+    G45{{"Stage 4.5 终审诚信闸门<br/>定稿前 · 全检 100% · 零容忍"}}
+    Check["7 模式 AI 失败清单<br/>（Lu 2026 · 固定顺序 M1-M7）"]
+    G25 --> Check
+    G45 --> Check
+    Check --> Pass["全 CLEAR → PASS"]
+    Check --> Fail["任一 SUSPECTED → FAIL"]
+    Fail -->|2.5：修 + 重验，最多 3 轮| G25
+    Fail -->|4.5：零容忍，必须 CLEAR 或用户 Override| G45
+    style G25 fill:#fef3c7
+    style G45 fill:#fee2e2
+    style Check fill:#dbeafe
+    style Pass fill:#dcfce7
+    style Fail fill:#fecaca
+```
+
+## 6.2 7 模式 AI 失败清单（核心防线）
+
+来自 Lu et al. 2026《The AI Scientist》的失败模式枚举。ARS 把它做成阻断式清单，固定顺序 M1-M7：
+
+| 模式 | 名称 | 防什么 |
+|---|---|---|
+| **M1** | 实现 bug 蒙混过 AI 自审 | 代码缺陷被 AI 自我评审放过 |
+| **M2** | 幻觉引用 | 编造不存在的参考文献 |
+| **M3** | 幻觉实验结果 | 编造没跑出来的数据 |
+| **M4** | 走捷径依赖 | 用 shortcut 替代真正的方法 |
+| **M5** | bug 包装成洞见 | 把实现缺陷重新叙述成「新发现」 |
+| **M6** | 方法学伪造 | 编造没用过的方法 |
+| **M7** | 过早框架锁死 | 流程早期就锁死一个框架不再质疑 |
+
+> Stage 2.5 任一模式 SUSPECTED，或 M1/M3/M5/M6 证据不足，就 FAIL；Stage 4.5 **零容忍**——2.5 标记过的疑点必须 CLEAR 或被用户带理由 Override（记录在案）。
+
+## 6.3 反谄媚：让步阈值协议
+
+AI 容易「你一反驳我就认错」。ARS 在评审侧装了**让步阈值**：魔鬼代言人（Devil's Advocate）发起质疑后，对方的反驳会被打 **1-5 分**，**低于 4 分不许让步**。还有「框架锁死检测器」防止双方陷入同一思维定式。
+
+```mermaid
+flowchart LR
+    DA["魔鬼代言人<br/>发起质疑"]
+    Reb["对方反驳"]
+    Score{"反驳质量打分<br/>1-5"}
+    Concede["让步 / 修改"]
+    Hold["不让步<br/>保持质疑"]
+    DA --> Reb --> Score
+    Score -->|≥4| Concede
+    Score -->|<4| Hold
+    style DA fill:#fee2e2
+    style Score fill:#fef3c7
+    style Hold fill:#dbeafe
+    style Concede fill:#dcfce7
+```
+
+配套的还有 **Sprint Contract 硬闸门**（见 [04 · 技能详解](04-四大技能详解.md) §4.3）：评审先在看不到论文时提交评分计划，杜绝「看了论文再编标准」。
+
+## 6.4 反泄漏协议（Anti-Leakage）
+
+写作时，AI 容易用「脑子里记得的」知识去填 session 材料里没有的内容（参数化记忆泄漏）。反泄漏协议要求：**草稿里凡是 session 材料不能支撑的填充，一律打 `[MATERIAL GAP]` 标记**，由用户补材料或接受缺口。这优先「会话材料 > LLM 记忆」。
+
+## 6.5 L3 引用幻觉检测（最前沿的一道防线）
+
+Zhao et al. 2026 实测 2025 年约 **146,932 条幻觉引用**，并点名最难的一类：**真引用被拿来支撑被引文献其实没说的论断**。ARS 把论断忠实度的问题内部命名为 **L3（claim faithfulness）**，分两半建防线：
+
+```mermaid
+flowchart TB
+    subgraph H1["v3.7.3 上半场 · 定位器（locator）"]
+        L1["每条引用 marker 后加引用锚<br/>anchor:kind:value<br/>kind ∈ quote/page/section/paragraph/none"]
+    end
+    subgraph H2["v3.8 下半场 · 审计（audit，opt-in）"]
+        L2["ARS_CLAIM_AUDIT=1 开启<br/>逐条抓取被引原文对照锚点<br/>判断论断是否真被支撑"]
+        L3w["5 类 HIGH-WARN<br/>论断未支撑 / 负约束违反 /<br/>伪造引用 / 无锚点 / 违约未引"]
+    end
+    Gate["formatter 终端硬闸门<br/>REFUSE 规则 6-10<br/>未解决就拒绝出稿"]
+    H1 --> H2
+    L2 --> L3w --> Gate
+    style H1 fill:#dbeafe
+    style H2 fill:#fef3c7
+    style Gate fill:#fee2e2
+```
+
+- **上半场（v3.7.3）**：给每条引用加「锚点」（引文/页码/章节），为后续逐条审计铺设施。
+- **下半场（v3.8，默认关）**：`ARS_CLAIM_AUDIT=1` 时，逐条抓取被引文献对照锚点，用 LLM 当裁判判断论断是否被真正支撑；命中 5 类 HIGH-WARN 之一就由 formatter **拒绝出稿**。校准用 20 元组 gold set，验收门槛 FNR<0.15 + FPR<0.10。
+
+## 6.6 三索引三角验证（污染信号）
+
+单一索引（Semantic Scholar）查不到一条引用，可能只是覆盖盲区，不一定是幻觉。v3.9.0 扩展到**三索引三角验证**（S2 + OpenAlex + Crossref），把「几个索引都查不到」作为**分级的污染advisory信号**。
+
+```mermaid
+flowchart LR
+    Ref["一条引用"]
+    S2["Semantic Scholar"]
+    OA["OpenAlex"]
+    CR["Crossref"]
+    Ref --> S2 & OA & CR
+    S2 & OA & CR --> K{"k = 未匹配索引数"}
+    K -->|k=0| C0["无后缀"]
+    K -->|k=1| C1["COVERAGE-NOISE / UNMATCHED"]
+    K -->|k=2| C2["PARTIAL-UNMATCH"]
+    K -->|k=3| C3["TRIANGULATION-UNMATCHED"]
+    style Ref fill:#dbeafe
+    style K fill:#fef3c7
+    style C3 fill:#fee2e2
+```
+
+> **v3.9.0 起这些是「建议（advisory）」，不改变闸门决定。** v3.10 才加了**可选的 terminal policy 层**：用户主动开 `strict` 模式，才把 k=3 信号升级成不可确认的 `HIGH-BLOCK`。默认行为与 v3.9.0 字节等价——**不开严格模式，什么都不变**。
+
+## 6.7 协作深度观察者（advisory，从不阻断）
+
+v3.5 的 `collaboration_depth_agent` 在每个检查点旁观，对「人机协作模式」打 4 个维度分（委托强度、认知警觉、认知再分配、区域分类），写进检查点呈现和过程记录。它**永远只给建议**。**两道 MANDATORY 诚信闸门（2.5 / 4.5）明确不调用它**，以免稀释合规检查。
+
+## 6.8 闸门全景
+
+```mermaid
+flowchart TB
+    subgraph Machine["🤖 机器闸门（CI / 运行时）"]
+        M1["S2 引用核验（Levenshtein ≥0.70）"]
+        M2["反泄漏 [MATERIAL GAP]"]
+        M3["VLM 图表 10 点 APA 清单"]
+        M4["7 模式诚信清单"]
+        M5["让步阈值 / Sprint Contract"]
+        M6["L3 论断审计 + 三角验证"]
+    end
+    subgraph Human["🧑 决策关（用户拍板）"]
+        H1["批准 RQ / 大纲"]
+        H2["读编辑决定"]
+        H3["确认修订 / 冻结 / 格式 / 语言"]
+    end
+    Machine -.辅助.-> Human
+    style Machine fill:#dbeafe
+    style Human fill:#fee2e2
+```
+
+## 小结
+
+ARS 的诚信不是一句口号，而是一组可执行的防线：**7 模式清单**挡 AI 研究的经典翻车；**反谄媚**让批评不被廉价收买；**反泄漏**挡记忆污染；**L3 + 三角验证**专打引用幻觉这一最难问题；**协作观察者**旁观但不越权。默认保守、严格模式 opt-in——保证「不主动开就不改变行为」。
+
+下一篇看支撑这一切的工具与打包 → [07 · 工具链 / 打包 / 钩子](07-工具链与打包.md)
+
+</script>
+<script type="text/markdown" data-id="toolchain">
+# 07 · 工具链 / 打包 / 钩子
+
+> 前几篇讲的是「内容」。本篇讲「外壳」：ARS 怎么被安装、怎么被触发、怎么被自动守护、怎么保证文档不互相矛盾。这是给维护者和贡献者看的一章。
+
+## 7.1 两种安装方式
+
+```mermaid
+flowchart TB
+    subgraph A["方式① 插件（v3.7.0+，推荐）"]
+        A1["/plugin marketplace add Imbad0202/academic-research-skills"]
+        A2["/plugin install academic-research-skills"]
+        A1 --> A2
+    end
+    subgraph B["方式② 传统 symlink"]
+        B1["git clone 仓库"]
+        B2["把 4 个技能目录 symlink 到 ~/.claude/skills/"]
+        B1 --> B2
+    end
+    A2 --> Ready["✅ 加载即用<br/>13 斜杠命令 + 3 插件 Agent + 2 Hook"]
+    B2 --> Ready
+    style A fill:#dbeafe
+    style B fill:#fef3c7
+    style Ready fill:#dcfce7
+```
+
+两条路都是一等公民。插件方式由 `.claude-plugin/{plugin,marketplace}.json` 两个清单驱动，外加仓库新增的 `commands/`、`agents/`、`hooks/`、`skills/` 目录。
+
+## 7.2 13 个斜杠命令 + 模型路由
+
+`commands/ars-*.md` 把 `MODE_REGISTRY.md` 的模式映射成 `/ars-<mode>` 触发器，并在 frontmatter 钉死模型档位。
+
+| 命令 | 触发的技能/模式 | 模型 |
+|---|---|---|
+| `/ars-full` | academic-pipeline 编排器（全流程） | **opus** |
+| `/ars-revision-coach` | academic-paper 修订辅导 | **opus** |
+| `/ars-plan` | academic-paper plan（Socratic 规划） | sonnet |
+| `/ars-lit-review` | deep-research / academic-paper 文献回顾 | sonnet |
+| `/ars-reviewer` | academic-paper-reviewer 评审 | sonnet |
+| `/ars-revision` | academic-paper 修订 | sonnet |
+| `/ars-outline` | academic-paper 仅大纲 | sonnet |
+| `/ars-abstract` | academic-paper 双语摘要 | sonnet |
+| `/ars-citation-check` | academic-paper 引用核验 | sonnet |
+| `/ars-format-convert` | academic-paper 格式转换 | sonnet |
+| `/ars-disclosure` | academic-paper venue 披露 | sonnet |
+| `/ars-mark-read` | 记录「人已读某引用」信号 | sonnet |
+| `/ars-unmark-read` | 撤销上述信号 | sonnet |
+
+> 路由原则：**重活（全流程编排、修订辅导）用 opus，其余用 sonnet，不用 haiku**——质量优先。详见 [02 · 多 Agent 机制](02-多Agent执行机制.md) §2.5。
+
+## 7.3 两个 Hook：开场播报 + 写域守卫
+
+`hooks/hooks.json` 注册了两个钩子，由 Claude Code 宿主在相应时机自动执行。
+
+```mermaid
+sequenceDiagram
+    participant CC as Claude Code 宿主
+    participant SH as announce-ars-loaded.sh
+    participant WG as ars_write_scope_guard.py
+    participant A as 子 Agent
+    CC->>SH: SessionStart 事件
+    SH-->>CC: 注入 additionalContext<br/>（列出 13 命令 + 3 Agent + 预算指针）
+    Note over CC,SH: 会话一开始就告诉你 ARS 已加载
+    A->>CC: 想 Write/Edit/MultiEdit/Bash
+    CC->>WG: PreToolUse 拦截
+    WG-->>CC: 放行 / 拒绝越界写 / 拒绝单阶段 Agent 的 Bash
+    Note over CC,WG: 宿主强制拦截，不靠 Agent 自觉
+```
+
+| Hook | 事件 | 脚本 | 作用 |
+|---|---|---|---|
+| 开场播报 | SessionStart | `announce-ars-loaded.sh` | 会话开始时列出命令/Agent/预算指针（Bash 3.2 兼容、无副作用） |
+| 写域守卫 | PreToolUse | `ars_write_scope_guard.py` | 把 23 个单阶段 Agent 围在各自 phase 目录、禁 Bash、保护执行面（详见 [02](02-多Agent执行机制.md) §2.4） |
+
+## 7.4 脚本工具链（143 个 Python）
+
+`scripts/` 下全是 Python 标准库脚本，**不参与论文生成**，是给维护者的护栏。按前缀分类：
+
+```mermaid
+flowchart LR
+    subgraph S["scripts/（143 个 .py）"]
+        CK["check_*.py × 41<br/>规范一致性 lint<br/>（模式数 / Schema 字段 / 引用语法…）"]
+        TST["test_*.py × 72<br/>pytest 套件<br/>（含 lint 的变异测试）"]
+        MIG["migrate_*.py × 3<br/>语料 Schema 版本迁移<br/>（幂等 / dry-run）"]
+        ADP["adapters/*.py × 4<br/>文献语料适配器参考实现<br/>folder_scan / zotero / obsidian"]
+        SYN["sync_*.py × 1<br/>Schema → 文档防漂移"]
+    end
+    style CK fill:#dbeafe
+    style TST fill:#dcfce7
+    style MIG fill:#fef3c7
+    style ADP fill:#fee2e2
+    style SYN fill:#e0e7ff
+```
+
+| 前缀 | 数量 | 干什么 |
+|---|---|---|
+| `check_*` | 41 | 规范一致性 lint：版本化校验某条规则在各处不矛盾（如 `check_v3_10_policy.py`、`check_sprint_contract.py`） |
+| `test_*` | 72 | pytest 测试；很多是对 lint 本身的「变异测试」（故意改坏看 lint 能否抓到） |
+| `migrate_*` | 3 | 把旧版语料迁到新 Schema（深合并、幂等、dry-run、不回填） |
+| `adapters/` | 4 | 文献语料适配器参考实现（用户预期照此写自己的） |
+| `sync_*` | 1 | 防止 Schema 与文档漂移 |
+
+> 项目当前回归基线约 **967 通过 / 3 跳过 / 0 失败**。
+
+## 7.5 CI：10 条工作流守规范
+
+`.github/workflows/` 有 10 条 GitHub Actions，核心是 **spec-consistency.yml**——把上面 41 个 `check_*` lint 串起来跑，保证「文档说的」和「Schema/代码定的」始终一致。
+
+| 工作流 | 作用 |
+|---|---|
+| `spec-consistency.yml` | 规范一致性总闸（跑各版本 lint） |
+| `pytest.yml` | 跑适配器 / 脚本的 pytest |
+| `eval-harness.yml` | 评估 gold set + 排序提升门槛 |
+| `freshness-check.yml` | 180 天新鲜度检查 |
+| `test-count-monotonic.yml` | 测试数只增不减（防偷偷删测试） |
+| `release-cooldown.yml` | 发布冷却期 |
+| `harness-retirement-monthly.yml` | 月度退役清理 |
+| `defer-label-gate.yml` / `pr-closes-issue.yml` / `post-squash-review.yml` | PR / issue 流程治理 |
+
+## 7.6 自己动手：常见维护动作
+
+```mermaid
+flowchart TB
+    Edit["改了某处规范<br/>（SKILL / Schema / 协议）"]
+    Lint["本地跑对应 check_*.py"]
+    Test["跑 pytest 变异套件"]
+    CI["推 PR → CI 跑 spec-consistency"]
+    Edit --> Lint --> Test --> CI
+    CI -->|绿| Merge["合并"]
+    CI -->|红| Edit
+    style Edit fill:#dbeafe
+    style CI fill:#fef3c7
+    style Merge fill:#dcfce7
+```
+
+> 黄金法则：**改规范先想「哪个 `check_*` 守着它」**，本地先跑过 lint 再推 PR。新增一条规则，通常要同时新增「lint + 变异测试 + CI 接线」三件套。
+
+## 小结
+
+ARS 的外壳 = **插件/symlink 双安装 + 13 个 `/ars-*` 命令（模型路由 opus/sonnet）+ 2 个 Hook（开场播报 + 写域守卫）+ 143 个 Python 护栏脚本 + 10 条 CI 工作流**。所有这些都围绕一个目标：让「内容层」的诚信承诺在工程上不被悄悄破坏。
+
+最后一篇是速查 → [08 · 术语表与 FAQ](08-术语表与FAQ.md)
+
+</script>
+<script type="text/markdown" data-id="glossary">
+# 08 · 术语表与 FAQ
+
+> 随时回查的一页纸：名词速查 + 常见疑问 + 全局总结。
+
+## 8.1 一页纸总结（看这一张图就够回忆全局）
+
+```mermaid
+mindmap
+  root((ARS 全貌))
+    本体
+      4 技能剧本 SKILL.md
+      约 38 个 Agent 人设
+      143 个 Python 护栏
+      非运行服务
+    执行机制
+      主控读 SKILL.md
+      Task 工具派发子 Agent
+      文件黑板 Material Passport
+      PreToolUse Hook 守边界
+      模型分层 opus/sonnet
+    主流程 10 阶段
+      研究 → 写作
+      2.5 诚信关
+      评审 → 修订 → 复审
+      4.5 诚信关
+      定稿 → 总结
+    数据
+      Material Passport 中枢
+      13 交接 Schema
+      literature_corpus 输入口
+      raw → redacted → verified
+    诚信
+      7 模式失败清单
+      反谄媚 让步阈值
+      反泄漏 MATERIAL GAP
+      L3 引用幻觉 + 三角验证
+      协作观察者 仅建议
+```
+
+## 8.2 术语表
+
+| 术语 | 一句话解释 |
+|---|---|
+| **ARS** | Academic Research Skills，本项目；4 个 Claude Code 技能套件 |
+| **技能 / Skill** | 一份 `SKILL.md` 剧本，定义触发词、Agent 阵容、编排流程 |
+| **Agent** | 一份 Markdown 人设；被主控用 Task 工具派发后以独立上下文执行单一职责 |
+| **主控 Claude** | 加载 SKILL.md、按剧本拆步骤、派发子 Agent 的那个 Claude 实例 |
+| **Task 工具** | Claude Code 原生的「派发子 Agent」原语，唯一的派发方式 |
+| **文件黑板** | Agent 间不直接对话，通过读写共享文件接力；核心是 Material Passport |
+| **Material Passport（材料护照）** | Schema 9；随产物同行的溯源 + 验证元数据账本，整条链路的中枢 |
+| **Handoff Schema** | 跨技能数据契约（共 13 个），定义「谁产出 → 谁消费」 |
+| **literature_corpus[]** | 护照里可选的用户文献输入口；由会话外适配器填充 |
+| **适配器 / Adapter** | 把用户语料（Zotero/Obsidian/PDF）转成 `literature_corpus[]` 的脚本 |
+| **data_access_level** | 声明式数据级别：raw → redacted → verified_only |
+| **诚信闸门（Stage 2.5 / 4.5）** | 机器先跑 7 模式验证、用户再确认的两道关 |
+| **7 模式失败清单** | Lu 2026 列举的 AI 研究七种翻车方式（M1-M7） |
+| **让步阈值协议** | 反谄媚：反驳打分 <4 不让步 |
+| **Sprint Contract** | Schema 13；评审看不到论文时先提交的评分契约（防事后编标准） |
+| **反泄漏协议** | 草稿里无据填充打 `[MATERIAL GAP]`，优先会话材料而非 LLM 记忆 |
+| **L3 / claim faithfulness** | 论断忠实度；专指「真引用支撑了被引文献其实没说的论断」 |
+| **引用锚 / anchor** | 每条引用 marker 后的 `quote/page/section` 定位，为逐条审计铺路 |
+| **三索引三角验证** | S2 + OpenAlex + Crossref；几个索引都查不到 → 分级污染信号 |
+| **terminal policy 层（v3.10）** | 可选 `strict` 模式，把 k=3 信号升级成 `HIGH-BLOCK`；默认关闭 |
+| **协作深度观察者** | v3.5 旁观打分的 advisory Agent，从不阻断 |
+| **魔鬼代言人 / Devil's Advocate** | 专门发起对抗性质疑、做 3 个强制检查点的 Agent |
+| **Bucket A 单阶段 Agent** | 被写域守卫围在各自 phase 目录、禁 Bash 的 23 个 Agent |
+| **Material Passport reset boundary** | v3.6.3 跨会话续跑的重置边界账本 |
+
+## 8.3 FAQ
+
+**Q1：这项目我能直接「运行」吗？有 `main` 吗？**
+没有。它是技能剧本 + Agent 人设 + 校验脚本的集合，靠 Claude Code 加载并执行。你「运行」它的方式是在 Claude Code 里触发某个 `/ars-*` 命令或说出触发词。
+
+**Q2：这么多 Agent 用了什么编排框架？**
+**没有外部框架。** 编排逻辑写在 `SKILL.md` 的文字剧本里，主控照做；派发用 Claude Code 原生 Task 工具；协同靠文件黑板（Material Passport）；边界靠 PreToolUse Hook。详见 [02](02-多Agent执行机制.md)。
+
+**Q3：Agent 之间怎么传数据？**
+不直接对话。上游 Agent 把产物写进共享文件，下游 Agent 读这些文件。最重要的共享文件是 Material Passport。
+
+**Q4：它会不会全自动帮我编一篇论文？**
+不会，也刻意不这么设计。它是**人在环中**：AI 做苦力（找文献、核引用、查逻辑、改格式），定题/选方法/解释数据/最终拍板永远是你。每个阶段都有检查点。
+
+**Q5：它怎么防止 AI 编造引用？**
+多层：Stage 1 的 Semantic Scholar 核验（标题 Levenshtein ≥0.70）、7 模式清单的 M2、L3 引用锚 + 逐条审计（opt-in）、三索引三角验证。详见 [06](06-质量闸门与诚信机制.md)。
+
+**Q6：我只想做文献回顾 / 只想评审，要跑整条流水线吗？**
+不用。单一功能直接触发对应技能（如 `/ars-lit-review`、`/ars-reviewer`）。只有要端到端「研究→定稿」才用 `academic-pipeline`。
+
+**Q7：那些 `strict` / `HIGH-BLOCK` 会不会突然挡我出稿？**
+默认不会。v3.10 的严格模式是 **opt-in**，不开就与 v3.9.0 字节等价。只有你主动开了 `strict`，k=3 三角验证未匹配才会升级成终端阻断。
+
+**Q8：143 个 Python 脚本是干嘛的，会影响我用吗？**
+不影响。它们是给维护者的 CI 护栏（lint + 测试 + 迁移 + 适配器），保证文档/Schema 不互相矛盾，**不参与论文生成**。
+
+**Q9：支持哪些语言输出？**
+默认跟随你的输入语言（繁中 / 简中 / 英文）。仓库本身有 4 个语言版 README。
+
+**Q10：长项目跑一半会话满了怎么办？**
+用 v3.6.3 的跨会话续跑：`ARS_PASSPORT_RESET=1` 在 FULL 检查点写重置边界，新会话用 `resume_from_passport=<hash>` 从 Material Passport 账本续跑，无需重放之前对话。
+
+## 8.4 延伸阅读（项目内权威文档）
+
+| 想深入 | 看这里 |
+|---|---|
+| 完整阶段 × 技能 × 产物矩阵 | `docs/ARCHITECTURE.md` |
+| 全部 25 个模式 | `MODE_REGISTRY.md` |
+| 13 个数据契约细节 | `shared/handoff_schemas.md` |
+| 7 模式失败清单 | `academic-pipeline/references/ai_research_failure_modes.md` |
+| 安装与配置 | `docs/SETUP.md` |
+| token 预算与成本 | `docs/PERFORMANCE.md` |
+| 版本演进 | `CHANGELOG.md` |
+
+---
+
+读完八篇，你应该已经能向别人讲清楚：**ARS 是什么、多 Agent 怎么被 Claude Code 跑起来、主流程长什么样、数据怎么流、诚信怎么保、工具怎么组织。** 🎓
+
+← 回到 [🏠 首页](README.md)
 
 </script>
 
   <script>
-  const FILE_TO_ID = {"README.md": "readme", "01-架构示例.md": "01"};
+  const FILE_TO_ID = {"README.md": "home", "01-项目总览.md": "overview", "02-多Agent执行机制.md": "agents", "03-端到端链路.md": "pipeline", "04-四大技能详解.md": "skills", "05-数据模型与ER图.md": "data", "06-质量闸门与诚信机制.md": "gates", "07-工具链与打包.md": "toolchain", "08-术语表与FAQ.md": "glossary"};
   const PAGES = Array.from(document.querySelectorAll('script[type="text/markdown"]'))
                      .map(s => ({ id: s.dataset.id, md: s.textContent }));
   const NAV = Array.from(document.querySelectorAll('#sidebar a[data-target]'));
