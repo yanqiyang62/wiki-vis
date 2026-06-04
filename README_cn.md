@@ -14,12 +14,9 @@
 
 [English](README.md) · **中文**
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/screenshot-dark.png">
-  <img alt="wiki-vis 截图" src="assets/screenshot.png" width="860">
-</picture>
+<img alt="wiki-vis 截图" src="assets/screenshot.png" width="860">
 
-<sub>内置亮 / 暗双主题 —— 本图会跟随你的 GitHub 主题；生成的 wiki 里随时点 ☾/☀ 切换。</sub>
+<sub>截图是 wiki-vis 给 <b>academic-research-skills</b> 仓库生成的真实 wiki —— <a href="https://yanqiyang62.github.io/wiki-vis/">在线查看 ↗</a> &nbsp;·&nbsp; 源文件 <a href="examples/wiki2.html"><code>examples/wiki2.html</code></a></sub>
 
 </div>
 
@@ -32,8 +29,7 @@
 | 🧭 **两种用法** | 分析项目并**撰写**文档，或直接转换你已有的 Markdown |
 | 🎨 **精致主题** | 紫靛渐变 + Tailwind slate，侧边栏导航，按标题层级**可折叠**的彩色章节框 |
 | 📊 **统计条** | 章节 / 小节 / 图示 / 表格 实时计数 |
-| 🖼️ **Mermaid** | 同色系主题 + **🔍 放大**浮层（滚轮缩放 · 拖拽平移 · Esc） |
-| 🌗 **亮 / 暗** | ☾/☀ 切换，状态存 `localStorage`；默认主题用 `--theme light\|dark\|auto` |
+| 🖼️ **Mermaid** | 原生图表 + **🔍 放大**浮层（滚轮缩放 · 拖拽平移 · Esc） |
 | ✅ **图质量闸门** | `lint_mermaid.py` 抓 `Syntax error` 雷区；`check_render.py` 真渲染每张图兜底 |
 | 📦 **单文件** | 纯前端、零后端；构建脚本**仅依赖 Python 3 标准库** |
 
@@ -71,7 +67,7 @@ open wiki.html            # macOS（Linux：xdg-open wiki.html）
 几秒钟试一下自带示例：
 
 ```bash
-python3 build_wiki.py --docs examples/docs --out examples/wiki.html --theme auto
+python3 build_wiki.py --docs examples/docs --out examples/wiki.html
 ```
 
 ---
@@ -88,7 +84,6 @@ python3 build_wiki.py --docs examples/docs --out examples/wiki.html --theme auto
 | `--docs DIR` | Markdown 目录（默认 `docs/`，不存在则用 `.`） |
 | `--out FILE` | 输出文件（默认 `wiki.html`） |
 | `--config FILE` | JSON 配置（见下） |
-| `--theme light\|dark\|auto` | 默认主题（`auto` 跟随系统）；读者仍可切换 |
 | `--lint` | 构建前跑 Mermaid 校验，发现 ERROR 即中止 |
 | `--title / --brand / --subtitle / --footer` | 品牌文案 |
 | `--template FILE` | 使用自定义模板壳 |
@@ -106,7 +101,6 @@ python3 build_wiki.py --docs examples/docs --out examples/wiki.html --theme auto
   "footer":   "由 wiki-vis 生成 · 改 .md 后重跑即可更新",
   "docs":     "docs",
   "out":      "wiki.html",
-  "theme":    "auto",
   "pages": [
     { "file": "README.md",     "id": "home",     "nav": "🏠 首页 / 导航" },
     { "file": "01-架构设计.md", "id": "arch",     "nav": "01 · 架构设计 ⭐" }
@@ -151,7 +145,7 @@ git clone https://github.com/yanqiyang62/wiki-vis.git .claude/skills/wiki-vis   
 --c-bg:#f8f9fb;  --c-text:#1e293b;  --c-border:#e2e8f0;  --radius:8px;
 ```
 
-章节顶条的层级配色在 `.sec-l2 / .sec-l3 / .sec-l4 / .sec-l5 > .sec-head`；暗色覆盖在 `html[data-theme="dark"]` 下。
+章节顶条的层级配色在 `.sec-l2 / .sec-l3 / .sec-l4 / .sec-l5 > .sec-head`。
 
 ---
 
@@ -173,7 +167,9 @@ wiki-vis/
 ├── references/
 │   ├── authoring-guide.md        # 项目 → 多文档 wiki 工作流（写作层 / the brain）
 │   └── wiki.config.example.json
-├── examples/docs/                # 可直接构建的示例文档
+├── examples/
+│   ├── docs/                     # 可直接构建的示例文档
+│   └── wiki2.html                # 展示用：academic-research-skills 生成的成品 wiki
 └── assets/                       # 截图
 ```
 
